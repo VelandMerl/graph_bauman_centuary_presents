@@ -1,2 +1,2 @@
-# graph_hell_that_is_delicious
+# graph_bauman_centuary_presents
 Coursework in discrete mathematics
