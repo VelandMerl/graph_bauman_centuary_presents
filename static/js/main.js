@@ -1,10 +1,34 @@
-// формирование таблицы
+// считывание матрицы для обработки 
 function get_matrix()
+{
+    var matrixData = '';
+
+    // Получаем значения из полей ввода и добавляем их в двумерный массив matrixData
+    for (var i = 1; i <= 2; i++) {
+        var row = ''
+
+        for (var j = 1; j <= 2; j++) {
+            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value + ' ';
+            row += input // добавляем значения ячеек в строку
+        }
+        row = row.slice(0, -1)
+        matrixData += row + ';' // добавляем строку в матрицу
+    }
+
+    // отправляем данные на сервер
+    fetch('/process/matrix', {
+        method: 'POST',
+        body: matrixData // отправляем матрицу в формате JSON
+    })
+}
+
+// формирование таблицы
+function get_size()
 {
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
 
     // отправка данных для обработки на Python
-    fetch('/process', {
+    fetch('/process/size', {
         method: 'POST', // тип запроса
         body: size // отправляем данные на сервер
     })
@@ -13,7 +37,7 @@ function get_matrix()
 
     var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
     
-    //matrixContainer.innerHTML = ''; // очищаем блок перед созданием новой матрицы
+    // matrixContainer.innerHTML = ''; // очищаем блок перед созданием новой матрицы
 
     // создаем таблицу для матрицы смежности
     var table = document.createElement('table');
@@ -57,7 +81,7 @@ function get_matrix()
     matrixContainer.appendChild(table);
 
     // добавление кнопки ввода
-    matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
+    matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
 }
 
     
