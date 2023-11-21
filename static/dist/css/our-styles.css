@@ -1,0 +1,15 @@
+/* CSS стили для таблицы и полей ввода */
+table {
+    border-collapse: collapse; /* объединение границ ячеек */
+    width: 100%;
+}
+th, td {
+    padding-right: 5px; /* внутренний отступ */
+    text-align: center;
+}
+input[type="text"] {
+    width: 50px; /* Ширина поля ввода */
+    height: 20px; /* Высота поля ввода */
+    text-align: center;
+    box-sizing: border-box;
+}

@@ -23,6 +23,7 @@ function get_matrix()
 }
 
 // формирование таблицы
+// логический параметр для блокировки главной диагонали
 function get_size()
 {
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
@@ -63,7 +64,7 @@ function get_size()
     for (var i = 1; i <= size; i++) {
         var row = document.createElement('tr');
         var vertexCell = document.createElement('td');
-        vertexCell.textContent = 'x' + i; // Подписи вершин (строки)
+        vertexCell.textContent = 'x' + i; // подписи вершин (строки)
         row.appendChild(vertexCell);
 
         // Ячейки матрицы для ввода данных (input)

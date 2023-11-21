@@ -19,7 +19,7 @@ def process_size():
     return 'Данные успешно получены на сервере' # требуется возврат текстового значения
 
 # обработка матрицы
-@app.route('/process/matrix', methods=['POST']) 
+@app.route('/process/matrix', methods=['POST'])
 def process_matrix():
     matrix = request.get_data(as_text=True)  # получаем матрицу из запроса
     print(matrix)
