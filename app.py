@@ -11,6 +11,7 @@ def hello_world():
 def index():
     return render_template("index.html", title = 'Графы')
 
+# в работе (не трогать)
 # обработка размера матрицы
 @app.route('/process/size', methods=['POST']) 
 def process_size():
