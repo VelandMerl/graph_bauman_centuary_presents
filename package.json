@@ -3,6 +3,7 @@
     "tailwindcss": "^3.3.5"
   },
   "dependencies": {
-    "flowbite": "^2.1.1"
+    "flowbite": "^2.1.1",
+    "vis-network": "^9.1.9"
   }
 }
