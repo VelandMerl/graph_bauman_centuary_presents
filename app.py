@@ -3,19 +3,19 @@ from flask import Flask, render_template, request
 
 class Step:
     text = "Default text for step"
-    nodes = []
-    node_options = {}
-    edges = {}
-    edge_options = {}
-    general_options = 'width: 1200 + "px", height: 400 + "px"'
+    nodes = [] # вершины
+    node_options = {} # доп опции вершин
+    edges = {} # ребра. Формат: (from, to): weight
+    edge_options = {} # Опции рёбер. Формат (from, to): options(как строка)
+    general_options = 'width: 1200 + "px", height: 400 + "px",  edges: { arrows: { to: {enabled: true}} , smooth: { enabled: true} },' # опции для всего холста
 
 steps = []
 A = Step()
 A.text = "\"Something for step 1\""
-A.nodes = [1, 2, 3]
-A.node_options =  { 1: 'label: "1", "color": "#97c2fc"', 2: 'label: \"2\", \"color\": \"#97c2fc\"', 3: '' }
-A.edges = { (1, 2): 4, (2, 3): 5, (3, 1): 10 }
-A.edge_options = { (1, 2): '\"width\": 2', (2, 3): '' }
+A.nodes = [1, 2, 3] 
+A.node_options =  { 1: 'label: "1", "color": "#FFFFFF"', 2: 'label: \"2\", \"color\": \"#97c2fc\"', 3: '' } 
+A.edges = { (1, 2): 4, (2, 3): 5, (3, 1): 10 } 
+A.edge_options = { (1, 2): '\"width\": 2', (2, 3): '' } 
 steps.append(A)
 
 A = Step()
@@ -45,14 +45,14 @@ steps.append(A)
 app = Flask(__name__)
 app.config.from_object('config')
 
+# alg_input = Step()
+# alg_steps = []
+# alg_last = Step()
+# return [alg_input, alg_steps, alg_last]
 @app.route('/')
 def hello_world():
-    step_text = ["Something for step 1", "Something to step 2", "Something at step 3"]
-    step_graph_option = { 1: "", 2: "", 3: "" }
-    nodes = ["1", "2", "3"]
-    edges = { ("1", "2"): 4, ("2", "3"): 5, ("3", "1"): 10 }
-    graph_step_vertex_options = ["", '"color": "#97c2fc"', '"color": "#97c2fc"']
-    graph_step_edges_options = ['', '"width": 2', '']
+    # input, steps, last = algorithm(matrix)
+    
     return render_template("main.html", title = 'Графы', steps = steps)
 
 @app.route("/index")
