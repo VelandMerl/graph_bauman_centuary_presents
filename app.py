@@ -51,7 +51,9 @@ app.config.from_object('config')
 # return [alg_input, alg_steps, alg_last]
 @app.route('/')
 def hello_world():
-    # input, steps, last = algorithm(matrix)
+    
+    # getdata()
+    # input, steps, last = algorithm(session['matrix'])
     
     return render_template("main.html", title = 'Графы', steps = steps)
 

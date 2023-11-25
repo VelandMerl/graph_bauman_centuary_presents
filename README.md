@@ -1,7 +1,8 @@
 # graph_bauman_centuary_presents
-Coursework in discrete mathematics
+Для запуска проекта
 
-- [x] Andrey test
-- [x] Kirill
-- [x] Maria
-- [x] Kolian
+npm install - установка недостающих node_modules
+
+npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css - компиляция классов tailwind
+
+py app.py
