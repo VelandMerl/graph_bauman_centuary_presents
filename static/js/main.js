@@ -1,42 +1,50 @@
+function myFunction() {
+    console.log('hey')
+}
+
 // считывание матрицы для обработки 
 function get_matrix()
 {
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
 
-    var matrixData = '';
+    var matrixData = [] // пустая матрица
 
     // Получаем значения из полей ввода и добавляем их в двумерный массив matrixData
     for (var i = 1; i <= matrixSize; i++) {
-        var row = ''
+        var row = [] // пустой одномерный массив
 
         for (var j = 1; j <= matrixSize; j++) {
-            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value + ' ';
-            row += input // добавляем значения ячеек в строку
+            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value;
+            row.push(Number(input)) // добавляем значения в одномерный массив
         }
-        row = row.slice(0, -1)
-        matrixData += row + ';' // добавляем строку в матрицу
+        matrixData.push(row) // добавляем одномерный массив в матрицу
     }
 
+    var dataToSend = {
+        size: matrixSize,
+        matrix: matrixData
+    };
+
     // отправляем данные на сервер
-    fetch('/demukron/process', {
+    fetch('/set_data_to_session', {
         method: 'POST',
-        body: matrixData // отправляем матрицу
+        headers: {
+            'Content-Type': 'application/json' // заголовок для корректного распознавания даннных на сервере
+        },
+        body: JSON.stringify(dataToSend) // отправляем данные
     })
 }
 
 // формирование таблицы
 // логический параметр для блокировки главной диагонали
-function get_size()
+function show_matrix(afterInput = false)
 {
-    var size = document.getElementById('range_size_of_matrix').value // размер матрицы
-
-    // // отправка данных для обработки на Python
-    // fetch('/process/size', {
-    //     method: 'POST', // тип запроса
-    //     body: size // отправляем данные на сервер
-    // })
-
-    document.getElementById('matrix_size_div').classList.add('hidden') // прячем кнопку ввода размера матрицы
+    if (afterInput) // если была введена матрица
+        var size = 2
+    else {
+        var size = document.getElementById('range_size_of_matrix').value // размер матрицы
+        document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
+    }
 
     var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
     
@@ -96,50 +104,6 @@ function get_size()
     });
 }
 
-    
-
-    // var table = document.createElement('table')
-    // // header line
-    // table.innerHTML = ''
-    // var line = '<tr class="bg-red-900">'
-    // for (var i = 0; i <= size; i += 1)
-    // {
-    //     if (i == 0)
-    //     {
-    //         line += '<td class="bg-red-900">1</td>'
-    //     }
-    //     else
-    //     {
-    //         line += '<td class="bg-grey-500">2</td>'
-    //     }
-    // }
-    // line += '</tr>'
-    // // table
-    // for (var i = 1; i <= size; i += 1)
-    // {
-  
-    //     line += '<tr>'
-    //     for (var j = 0; j <= size; j += 1)
-    //     {
-    //         if (j == 0)
-    //         {
-    //             line += '<td class="bg-grey-500">2</td>'
-    //         }
-    //         else if (i == j)
-    //         {
-    //             line += '<td class="bg-red-900">1</td>'
-    //         }
-    //         else
-    //         {
-    //             line += '<td class="bg-blue-500">3</td>'
-    //         }
-    //     }
-    //     line += '</tr>'
-    // }
-    // table.innerHTML = '<tbody>' + line + '</tbody>'
-    // div_matr.innerHTML = '<div>' + `<table id="matrix_input_table_${size} class="w-full border-separate text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"` + table.innerHTML + '</table></div>' + div_matr.innerHTML
-
-// Change the icons inside the button based on previous settings
 
 function change_Size(element)
 {

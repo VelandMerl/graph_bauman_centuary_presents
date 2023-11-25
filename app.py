@@ -47,7 +47,6 @@ steps.append(A)
 app = Flask(__name__)
 app.config.from_object('config')
 app.secret_key = 'your_secret_key' # секретный ключ для подписы данных сессии
-# app.permanent_session_lifetime = timedelta(seconds=0) # закрытие сессии при закрытии браузера
 
 # alg_input = Step()
 # alg_steps = []
@@ -64,6 +63,19 @@ def hello_world():
 @app.route("/index")
 def index():
     return render_template("index.html", title = 'Графы')
+
+@app.route('/set_data_to_session', methods=['POST'])
+def set_data_to_session():
+    data = request.get_json() # получаем данные
+    matrix = data.get('matrix')
+    size = data.get('size')
+    
+    print(f'Размер: {size}', f'Матрица: {matrix}', sep="\n") # тестовый вывод
+
+    session['matrix'] = matrix # сохранение матрицы в словаре "Session"
+    session['size'] = size # сохранение матрицы в словаре "Session"
+
+    return 'Данные успешно получены на сервере' # требуется возврат текстового значения
 
 # в работе (не трогать)
 # обработка размера матрицы
@@ -85,11 +97,11 @@ def demukron_process():
 @app.route('/demukron/result')
 def demukron_result():
 
-    print(f'Данные из сессии: {session.get("matrix")}') # тестовая печать данных из сессии
+    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
 
     Kirill.demukron_result()
 
-    return render_template("Kirill/demukron.html", title = 'Демукрон')
+    return render_template("Kirill/demukron_result.html", title = 'Демукрон')
 
 
 if __name__ == '__main__':
