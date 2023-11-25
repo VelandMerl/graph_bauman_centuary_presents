@@ -1,4 +1,6 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
+from datetime import timedelta
+import Algorithms.Kirill as Kirill # импорт модуля Кирилла
 
 
 class Step:
@@ -44,6 +46,8 @@ steps.append(A)
 
 app = Flask(__name__)
 app.config.from_object('config')
+app.secret_key = 'your_secret_key' # секретный ключ для подписы данных сессии
+# app.permanent_session_lifetime = timedelta(seconds=0) # закрытие сессии при закрытии браузера
 
 # alg_input = Step()
 # alg_steps = []
@@ -63,18 +67,30 @@ def index():
 
 # в работе (не трогать)
 # обработка размера матрицы
-@app.route('/process/size', methods=['POST']) 
-def process_size():
-    size = request.get_data(as_text=True) # получение данных
-    print('Размер матрицы:', size) # вывод полученных данных
-    return 'Данные успешно получены на сервере' # требуется возврат текстового значения
+# @app.route('/process/size', methods=['POST'])
+# def process_size():
+#     size = request.get_data(as_text=True) # получение данных
+#     print('Размер матрицы:', size) # вывод полученных данных
+#     return 'Данные успешно получены на сервере' # требуется возврат текстового значения
 
-# обработка матрицы
-@app.route('/process/matrix', methods=['POST'])
-def process_matrix():
-    matrix = request.get_data(as_text=True)  # получаем матрицу из запроса
-    print(matrix)
-    return 'Данные успешно получены на сервере' # требуется возврат текстового значения
+# Кирилл (алгоритм Демукрона)
+@app.route("/demukron")
+def demukron_input():
+    return render_template("Kirill/demukron.html", title = 'Демукрон')
+
+@app.route('/demukron/process', methods=['POST'])
+def demukron_process():
+    return Kirill.demukron()
+
+@app.route('/demukron/result')
+def demukron_result():
+
+    print(f'Данные из сессии: {session.get("matrix")}') # тестовая печать данных из сессии
+
+    Kirill.demukron_result()
+
+    return render_template("Kirill/demukron.html", title = 'Демукрон')
+
 
 if __name__ == '__main__':
     app.debug = True

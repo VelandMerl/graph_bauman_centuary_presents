@@ -1,13 +1,15 @@
 // считывание матрицы для обработки 
 function get_matrix()
 {
+    var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
+
     var matrixData = '';
 
     // Получаем значения из полей ввода и добавляем их в двумерный массив matrixData
-    for (var i = 1; i <= 2; i++) {
+    for (var i = 1; i <= matrixSize; i++) {
         var row = ''
 
-        for (var j = 1; j <= 2; j++) {
+        for (var j = 1; j <= matrixSize; j++) {
             var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value + ' ';
             row += input // добавляем значения ячеек в строку
         }
@@ -16,9 +18,9 @@ function get_matrix()
     }
 
     // отправляем данные на сервер
-    fetch('/process/matrix', {
+    fetch('/demukron/process', {
         method: 'POST',
-        body: matrixData // отправляем матрицу в формате JSON
+        body: matrixData // отправляем матрицу
     })
 }
 
@@ -28,11 +30,11 @@ function get_size()
 {
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
 
-    // отправка данных для обработки на Python
-    fetch('/process/size', {
-        method: 'POST', // тип запроса
-        body: size // отправляем данные на сервер
-    })
+    // // отправка данных для обработки на Python
+    // fetch('/process/size', {
+    //     method: 'POST', // тип запроса
+    //     body: size // отправляем данные на сервер
+    // })
 
     document.getElementById('matrix_size_div').classList.add('hidden') // прячем кнопку ввода размера матрицы
 
@@ -83,6 +85,15 @@ function get_size()
 
     // добавление кнопки ввода
     matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
+    
+    // ТУТ БУДЕТ ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
+    var button = document.getElementById('sendMatrixBtn');
+
+    // Добавляем обработчик события click
+    button.addEventListener('click', function() {
+        // переход по ссылке при нажатии на кнопку
+        window.location.href = '/demukron/result';
+    });
 }
 
     
