@@ -1,7 +1,3 @@
-function myFunction() {
-    console.log('hey')
-}
-
 // считывание матрицы для обработки 
 function get_matrix()
 {
@@ -37,18 +33,12 @@ function get_matrix()
 
 // формирование таблицы
 // логический параметр для блокировки главной диагонали
-function show_matrix(afterInput = false)
+function show_matrix()
 {
-    if (afterInput) // если была введена матрица
-        var size = 2
-    else {
-        var size = document.getElementById('range_size_of_matrix').value // размер матрицы
+    var size = document.getElementById('range_size_of_matrix').value // размер матрицы
         document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
-    }
 
     var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
-    
-    // matrixContainer.innerHTML = ''; // очищаем блок перед созданием новой матрицы
 
     // создаем таблицу для матрицы смежности
     var table = document.createElement('table');
@@ -80,9 +70,9 @@ function show_matrix(afterInput = false)
         // Ячейки матрицы для ввода данных (input)
         for (var j = 1; j <= size; j++) {
             var cell = document.createElement('td');
-            var input = document.createElement('input');
+            var input = document.createElement('input');        
             input.type = 'text';
-            input.name = 'matrixCell' + i + '_' + j;
+            input.name = 'matrixCell' + i + '_' + j;     
             cell.appendChild(input);
             row.appendChild(cell);
         }
@@ -90,19 +80,40 @@ function show_matrix(afterInput = false)
     }
     table.appendChild(tbody);
     matrixContainer.appendChild(table);
+    
+    // разрешения на ввод только чисел
+    matrixContainer.addEventListener('input', function(event) {
+        var target = event.target;
+    
+        if (target.tagName === 'INPUT') {
+            var inputValue = target.value;
+            if (!/^\d+$/.test(inputValue)) { // Разрешаем только цифры
+                // Очищаем поле ввода от некорректных символов
+                target.value = inputValue.replace(/\D/g, '');
+            }
+        }
+    });
 
     // добавление кнопки ввода
     matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
     
-    // ТУТ БУДЕТ ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
     var button = document.getElementById('sendMatrixBtn');
 
+    // ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
     // Добавляем обработчик события click
     button.addEventListener('click', function() {
         // переход по ссылке при нажатии на кнопку
         window.location.href = '/demukron/result';
     });
 }
+
+    //блок кода для вывода матрицы на странице с результатом
+    // if (afterInput) // если была введена матрица
+    //     var size = 2
+    // else {
+    //     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
+    //     document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
+    // }
 
 
 function change_Size(element)
