@@ -1,4 +1,6 @@
-// считывание матрицы для обработки 
+// просьба сильно не редачить эту красоту :)
+
+// считывание матрицы для обработк
 function get_matrix()
 {
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
