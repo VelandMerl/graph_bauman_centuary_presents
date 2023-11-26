@@ -32,8 +32,8 @@ function get_matrix()
 }
 
 // формирование таблицы
-// логический параметр для блокировки главной диагонали
-function show_matrix()
+// diag = false/true - диагональ заблокирована/разблокирована
+function show_matrix(diag = false)
 {
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
         document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
@@ -70,9 +70,13 @@ function show_matrix()
         // Ячейки матрицы для ввода данных (input)
         for (var j = 1; j <= size; j++) {
             var cell = document.createElement('td');
-            var input = document.createElement('input');        
+            var input = document.createElement('input');       
             input.type = 'text';
-            input.name = 'matrixCell' + i + '_' + j;     
+            input.name = 'matrixCell' + i + '_' + j;
+            if (!diag && i == j) { // блокировка диагонали
+                input.disabled = true;
+                input.value = 0;
+            } 
             cell.appendChild(input);
             row.appendChild(cell);
         }
@@ -80,7 +84,7 @@ function show_matrix()
     }
     table.appendChild(tbody);
     matrixContainer.appendChild(table);
-    
+
     // разрешения на ввод только чисел
     matrixContainer.addEventListener('input', function(event) {
         var target = event.target;
@@ -94,18 +98,34 @@ function show_matrix()
         }
     });
 
-    // добавление кнопки ввода
-    matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
-    
-    var button = document.getElementById('sendMatrixBtn');
-
-    // ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
-    // Добавляем обработчик события click
+    // создание кнопки ввода
+    var button = document.createElement('button');
+    button.id = 'sendMatrixBtn';
+    button.type = 'button';
+    button.className = 'text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
+    button.textContent = 'Enter';
     button.addEventListener('click', function() {
-        // переход по ссылке при нажатии на кнопку
-        window.location.href = '/demukron/result';
+        get_matrix(); // добавление функции get_matrix()
+        var currentPath = window.location.pathname; // получаем текущий путь
+        var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
+        window.location.href = resPath; // переход к результату по нажатию кнопки
     });
+
+    matrixContainer.appendChild(button); // добавление кнопки на страницу
 }
+
+    // // добавление кнопки ввода
+    // matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
+    
+    // var button = document.getElementById('sendMatrixBtn');
+
+    // // ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
+    // // Добавляем обработчик события click
+    // button.addEventListener('click', function() {
+    //     var currentPath = window.location.pathname; // получаем текущий путь
+    //     var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
+    //     window.location.href = resPath; // переход к реузультату по нажатию кнопки
+    // });
 
     //блок кода для вывода матрицы на странице с результатом
     // if (afterInput) // если была введена матрица
