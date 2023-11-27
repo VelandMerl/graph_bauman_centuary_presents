@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session
 from datetime import timedelta
 import Algorithms.Kirill as Kirill # импорт модуля Кирилла
+import Algorithms.Kolya as Kolya # импорт модуля Кирилла
 
 
 class Step:
@@ -92,6 +93,40 @@ def demukron_result():
     Kirill.demukron() # обращение к функции, реализующей алгоритм
 
     return render_template("Kirill/demukron_result.html", title = 'Демукрон')
+
+
+# Коля
+# Алгоритм Краскала
+# страница с вводом матрицы смежности
+@app.route("/kraskal")
+def kraskal_input():
+    return render_template("Kolya/kraskal.html", title = 'Краскал')
+
+# страница для вывода результата
+@app.route('/kraskal/result')
+def kraskal_result():
+
+    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
+
+    Kolya.kraskal() # обращение к функции, реализующей алгоритм
+
+    return render_template("Kolya/kraskal_result.html", title = 'Демукрон')
+
+# Алгоритм Прима
+# страница с вводом матрицы смежности
+@app.route("/prim")
+def prim_input():
+    return render_template("Kolya/prim.html", title = 'Демукрон')
+
+# страница для вывода результата
+@app.route('/prim/result')
+def prim_result():
+
+    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
+
+    Kolya.prim() # обращение к функции, реализующей алгоритм
+
+    return render_template("Kolya/prim_result.html", title = 'Демукрон')
 
 
 if __name__ == '__main__':

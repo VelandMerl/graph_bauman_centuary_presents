@@ -1,0 +1,27 @@
+<!--эта страница для вывода результатов работы алгоритма-->
+
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<!-- <script>
+    // вызываем функцию после загрузки страницы
+    window.onload = function() {
+            show_matrix(true);
+        };
+</script> -->
+
+<!--пока страница пустая, введённая матрица не выводится, данные о матрице уже сохранены в сессии-->
+<h1>результат</h1>
+<div class="max-w-screen-xl mx-auto">
+    <div class="flex flex-col justify-center items-center">
+        <div id="matrix_input" class="flex flex-col justify-center items-center mb-5 w-3/5" style="width: 100px">
+        </div>
+    </div> 
+</div>
+
+
+
+
+{% endblock %}
