@@ -3,6 +3,7 @@ from datetime import timedelta
 import Algorithms.Kirill as Kirill # импорт модуля Кирилла
 import Algorithms.Kolya as Kolya # импорт модуля Кирилла
 
+import time
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -78,7 +79,7 @@ def prim_input():
 # страница для вывода результата
 @app.route('/prim/result')
 def prim_result():
-
+    time.sleep(2)
     steps = Kolya.prim(session.get("matrix"))
 
     return render_template("Kolya/prim_result.html", title = 'Прим', steps = steps)
