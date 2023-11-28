@@ -3,12 +3,12 @@ from flask import session
 from Algorithms.Usefull_elements import Step
 import math
 
-def convert(R):
-    N = len (R)
+def convert(input):
+    N = len (input)
     result = []
     for i in range(N):
         for j in range(i+1, N):
-            result.append((R[i][j], i+1, j+1))
+            result.append((input[i][j], i+1, j+1))
     print(result)
     return result
 
