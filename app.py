@@ -1,4 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session
+from datetime import timedelta
+import Algorithms.Kirill as Kirill # импорт модуля Кирилла
+import Algorithms.Kolya as Kolya # импорт модуля Кирилла
 
 
 class Step:
@@ -72,6 +75,7 @@ for r in Rs:    # проходим по ребрам второй раз и об
 
 app = Flask(__name__)
 app.config.from_object('config')
+app.secret_key = 'your_secret_key' # секретный ключ для подписы данных сессии
 
 # alg_input = Step()
 # alg_steps = []
@@ -89,20 +93,69 @@ def hello_world():
 def index():
     return render_template("index.html", title = 'Графы')
 
-# в работе (не трогать)
-# обработка размера матрицы
-@app.route('/process/size', methods=['POST']) 
-def process_size():
-    size = request.get_data(as_text=True) # получение данных
-    print('Размер матрицы:', size) # вывод полученных данных
+# универсальная функция для всех для сохранения матрицы в сессии
+@app.route('/set_data_to_session', methods=['POST'])
+def set_data_to_session():
+    data = request.get_json() # получаем данные
+    matrix = data.get('matrix')
+    size = data.get('size')
+    session['matrix'] = matrix # сохранение матрицы в словаре "Session"
+    session['size'] = size # сохранение матрицы в словаре "Session"
+
+    print(f'Размер: {size}', f'Матрица: {matrix}', sep="\n") # тестовый вывод
+
     return 'Данные успешно получены на сервере' # требуется возврат текстового значения
 
-# обработка матрицы
-@app.route('/process/matrix', methods=['POST'])
-def process_matrix():
-    matrix = request.get_data(as_text=True)  # получаем матрицу из запроса
-    print(matrix)
-    return 'Данные успешно получены на сервере' # требуется возврат текстового значения
+# Кирилл (алгоритм Демукрона)
+# страница с вводом матрицы смежности
+@app.route("/demukron")
+def demukron_input():
+    return render_template("Kirill/demukron.html", title = 'Демукрон')
+
+# страница для вывода результата
+@app.route('/demukron/result')
+def demukron_result():
+
+    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
+
+    Kirill.demukron() # обращение к функции, реализующей алгоритм
+
+    return render_template("Kirill/demukron_result.html", title = 'Демукрон')
+
+
+# Коля
+# Алгоритм Краскала
+# страница с вводом матрицы смежности
+@app.route("/kraskal")
+def kraskal_input():
+    return render_template("Kolya/kraskal.html", title = 'Краскал')
+
+# страница для вывода результата
+@app.route('/kraskal/result')
+def kraskal_result():
+
+    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
+
+    Kolya.kraskal() # обращение к функции, реализующей алгоритм
+
+    return render_template("Kolya/kraskal_result.html", title = 'Демукрон')
+
+# Алгоритм Прима
+# страница с вводом матрицы смежности
+@app.route("/prim")
+def prim_input():
+    return render_template("Kolya/prim.html", title = 'Демукрон')
+
+# страница для вывода результата
+@app.route('/prim/result')
+def prim_result():
+
+    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
+
+    Kolya.prim() # обращение к функции, реализующей алгоритм
+
+    return render_template("Kolya/prim_result.html", title = 'Демукрон')
+
 
 if __name__ == '__main__':
     app.debug = True

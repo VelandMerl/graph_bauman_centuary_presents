@@ -1,44 +1,46 @@
-// считывание матрицы для обработки 
+// просьба сильно не редачить эту красоту :)
+
+// считывание матрицы для обработк
 function get_matrix()
 {
-    var matrixData = '';
+    var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
+
+    var matrixData = [] // пустая матрица
 
     // Получаем значения из полей ввода и добавляем их в двумерный массив matrixData
-    for (var i = 1; i <= 2; i++) {
-        var row = ''
+    for (var i = 1; i <= matrixSize; i++) {
+        var row = [] // пустой одномерный массив
 
-        for (var j = 1; j <= 2; j++) {
-            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value + ' ';
-            row += input // добавляем значения ячеек в строку
+        for (var j = 1; j <= matrixSize; j++) {
+            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value;
+            row.push(Number(input)) // добавляем значения в одномерный массив
         }
-        row = row.slice(0, -1)
-        matrixData += row + ';' // добавляем строку в матрицу
+        matrixData.push(row) // добавляем одномерный массив в матрицу
     }
 
+    var dataToSend = {
+        size: matrixSize,
+        matrix: matrixData
+    };
+
     // отправляем данные на сервер
-    fetch('/process/matrix', {
+    fetch('/set_data_to_session', {
         method: 'POST',
-        body: matrixData // отправляем матрицу в формате JSON
+        headers: {
+            'Content-Type': 'application/json' // заголовок для корректного распознавания даннных на сервере
+        },
+        body: JSON.stringify(dataToSend) // отправляем данные
     })
 }
 
 // формирование таблицы
-// логический параметр для блокировки главной диагонали
-function get_size()
+// diag = false/true - диагональ заблокирована/разблокирована
+function show_matrix(diag = false)
 {
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
-
-    // отправка данных для обработки на Python
-    fetch('/process/size', {
-        method: 'POST', // тип запроса
-        body: size // отправляем данные на сервер
-    })
-
-    document.getElementById('matrix_size_div').classList.add('hidden') // прячем кнопку ввода размера матрицы
+        document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
 
     var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
-    
-    // matrixContainer.innerHTML = ''; // очищаем блок перед созданием новой матрицы
 
     // создаем таблицу для матрицы смежности
     var table = document.createElement('table');
@@ -70,9 +72,13 @@ function get_size()
         // Ячейки матрицы для ввода данных (input)
         for (var j = 1; j <= size; j++) {
             var cell = document.createElement('td');
-            var input = document.createElement('input');
+            var input = document.createElement('input');       
             input.type = 'text';
             input.name = 'matrixCell' + i + '_' + j;
+            if (!diag && i == j) { // блокировка диагонали
+                input.disabled = true;
+                input.value = 0;
+            } 
             cell.appendChild(input);
             row.appendChild(cell);
         }
@@ -81,54 +87,56 @@ function get_size()
     table.appendChild(tbody);
     matrixContainer.appendChild(table);
 
-    // добавление кнопки ввода
-    matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
+    // разрешения на ввод только чисел
+    matrixContainer.addEventListener('input', function(event) {
+        var target = event.target;
+    
+        if (target.tagName === 'INPUT') {
+            var inputValue = target.value;
+            if (!/^\d+$/.test(inputValue)) { // Разрешаем только цифры
+                // Очищаем поле ввода от некорректных символов
+                target.value = inputValue.replace(/\D/g, '');
+            }
+        }
+    });
+
+    // создание кнопки ввода
+    var button = document.createElement('button');
+    button.id = 'sendMatrixBtn';
+    button.type = 'button';
+    button.className = 'text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
+    button.textContent = 'Enter';
+    button.addEventListener('click', function() {
+        get_matrix(); // добавление функции get_matrix()
+        var currentPath = window.location.pathname; // получаем текущий путь
+        var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
+        window.location.href = resPath; // переход к результату по нажатию кнопки
+    });
+
+    matrixContainer.appendChild(button); // добавление кнопки на страницу
 }
 
+    // // добавление кнопки ввода
+    // matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
     
+    // var button = document.getElementById('sendMatrixBtn');
 
-    // var table = document.createElement('table')
-    // // header line
-    // table.innerHTML = ''
-    // var line = '<tr class="bg-red-900">'
-    // for (var i = 0; i <= size; i += 1)
-    // {
-    //     if (i == 0)
-    //     {
-    //         line += '<td class="bg-red-900">1</td>'
-    //     }
-    //     else
-    //     {
-    //         line += '<td class="bg-grey-500">2</td>'
-    //     }
-    // }
-    // line += '</tr>'
-    // // table
-    // for (var i = 1; i <= size; i += 1)
-    // {
-  
-    //     line += '<tr>'
-    //     for (var j = 0; j <= size; j += 1)
-    //     {
-    //         if (j == 0)
-    //         {
-    //             line += '<td class="bg-grey-500">2</td>'
-    //         }
-    //         else if (i == j)
-    //         {
-    //             line += '<td class="bg-red-900">1</td>'
-    //         }
-    //         else
-    //         {
-    //             line += '<td class="bg-blue-500">3</td>'
-    //         }
-    //     }
-    //     line += '</tr>'
-    // }
-    // table.innerHTML = '<tbody>' + line + '</tbody>'
-    // div_matr.innerHTML = '<div>' + `<table id="matrix_input_table_${size} class="w-full border-separate text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"` + table.innerHTML + '</table></div>' + div_matr.innerHTML
+    // // ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
+    // // Добавляем обработчик события click
+    // button.addEventListener('click', function() {
+    //     var currentPath = window.location.pathname; // получаем текущий путь
+    //     var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
+    //     window.location.href = resPath; // переход к реузультату по нажатию кнопки
+    // });
 
-// Change the icons inside the button based on previous settings
+    //блок кода для вывода матрицы на странице с результатом
+    // if (afterInput) // если была введена матрица
+    //     var size = 2
+    // else {
+    //     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
+    //     document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
+    // }
+
 
 function change_Size(element)
 {
