@@ -65,6 +65,7 @@ def kraskal_input():
 # страница для вывода результата
 @app.route('/kraskal/result')
 def kraskal_result():
+    time.sleep(2)
     steps = Kolya.kraskal(session.get("matrix"))
     print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
 
