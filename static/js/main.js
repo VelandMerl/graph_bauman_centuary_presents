@@ -12,8 +12,12 @@ function get_matrix()
         var row = [] // пустой одномерный массив
 
         for (var j = 1; j <= matrixSize; j++) {
-            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0].value;
-            row.push(Number(input)) // добавляем значения в одномерный массив
+            var input = document.getElementsByName('matrixCell' + i + '_' + j)[0];
+            var type = input.type
+            if (type == 'text')
+                row.push(Number(input.value)) // добавляем значения в одномерный массив
+            else if (type == 'checkbox') 
+                row.push(Number(input.checked))              
         }
         matrixData.push(row) // добавляем одномерный массив в матрицу
     }
@@ -34,8 +38,9 @@ function get_matrix()
 }
 
 // формирование таблицы
-// diag = false/true - диагональ заблокирована/разблокирована
-function show_matrix(diag = false)
+// diag = false/true - разблокирована/диагональ заблокирована
+// bin = false/true - обычная с весами/бинарная
+function show_matrix(blockDiag = false, bin = false)
 {
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
         document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
@@ -72,10 +77,13 @@ function show_matrix(diag = false)
         // Ячейки матрицы для ввода данных (input)
         for (var j = 1; j <= size; j++) {
             var cell = document.createElement('td');
-            var input = document.createElement('input');       
-            input.type = 'text';
+            var input = document.createElement('input');
+            if (!bin)
+                input.type = 'text';
+            else
+                input.type = 'checkbox';
             input.name = 'matrixCell' + i + '_' + j;
-            if (!diag && i == j) { // блокировка диагонали
+            if (blockDiag && i == j) { // блокировка диагонали
                 input.disabled = true;
                 input.value = 0;
             } 
