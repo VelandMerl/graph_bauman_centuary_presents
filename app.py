@@ -2,8 +2,47 @@ from flask import Flask, render_template, request, session
 from datetime import timedelta
 import Algorithms.Kirill as Kirill # импорт модуля Кирилла
 import Algorithms.Kolya as Kolya # импорт модуля Кирилла
+import Algorithms.Strong_Connectivity as sc # импорт модуля Кирилла
 
 import time
+
+
+from Algorithms.Usefull_elements import Step
+test_steps = []
+
+
+
+A = Step()
+A.text = "\"Something for step 1\""
+A.nodes = [1, 2, 3] 
+A.node_options =  { 1: 'label: "1", "color": "#FFFFFF"', 2: 'label: \"2\", \"color\": \"#97c2fc\"', 3: '' } 
+A.edges = { (1, 2): 4, (2, 3): 5, (3, 1): 10 } 
+A.edge_options = { (1, 2): '\"width\": 2', (2, 3): '' } 
+test_steps.append(A)
+
+A = Step()
+A.text = "Something to step 2"
+A.nodes = ["1", "2", "3"]
+A.node_options =  { "1": 'label: \"node 1\", \"color\": \"#97c2fc\"', "2": 'label: \"node 2\", \"color\": \"#97c2fc\"', "3": '' }
+A.edges = { (1, 2): 4, (2, 3): 5, (3, 1): 10 }
+A.edge_options = { (1, 2): '\"width\": 2', (2, 3): '' }
+test_steps.append(A)
+
+A = Step()
+A.text = "Something at step 3"
+A.nodes = [1, 2, 3]
+A.node_options =  { 1: 'label: \"MT\", \"color\": \"#97c2fc\"', 2: 'label: \"AT\", \"color\": \"#97c2fc\"', 3: '' }
+A.edges = { (1, 2): 4, (2, 3): 5, (3, 1): 10 }
+A.edge_options = { (1, 2): '\"width\": 2', (2, 3): '' }
+test_steps.append(A)
+
+A = Step()
+A.text = "Something at step 4"
+A.nodes = [1, 2, 3]
+A.node_options =  { 1: 'label: \"MT\", \"color\": \"#97c2fc\"', 2: 'label: \"AT\", \"color\": \"#97c2fc\"', 3: '' }
+A.edges = { (1, 2): 4, (2, 3): 5, (3, 1): 10 }
+A.edge_options = { (1, 2): '\"width\": 2', (2, 3): '' }
+test_steps.append(A)
 
 app = Flask(__name__)
 app.config.from_object('config')
@@ -18,8 +57,10 @@ def hello_world():
     
     # getdata()
     # input, steps, last = algorithm(session['matrix'])
-    
-    return render_template("main.html", title = 'Графы')
+    matrix = [ [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [1, 1, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0] ]
+    steps = sc.algorithm_Malgrange(matrix)
+    return render_template("main.html", title = 'Мальгранж', steps = steps)
+    # return render_template("main.html", title = 'Графы')
 
 @app.route("/index")
 def index():

@@ -23,7 +23,8 @@
                     </h2>
                     <div id="accordion-open-body-{{ i }}" class="hidden" aria-labelledby="accordion-open-heading-{{ i }}">
                         <div class="p-5 border border-b-0 border-gray-200 dark:border-gray-700 dark:bg-gray-900">
-                            <p class="mb-2 text-gray-500 dark:text-gray-400">{{ step.text|safe }}</p>
+                            {# <p class="mb-2 text-gray-500 dark:text-gray-400">{{ step.text|safe }}</p> #}
+                            {{ step.text|safe }}
                             <div id="network_step_{{ i }}"></div>
                         </div>
                     </div>
@@ -99,3 +100,5 @@
         
     </div> 
 </div>
+
+{% endblock %}
