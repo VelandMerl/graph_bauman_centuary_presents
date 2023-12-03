@@ -28,6 +28,7 @@ def algorithm_Malgrange(matrix):
     while len(tracked_vertex) > 0:
         new_step = Step(True)
         new_step.edges = edges
+        new_step.step_label = ''
         forward_closure.clear()
         reverse_closure.clear()
         vertex_to_review = tracked_vertex[0]
@@ -108,7 +109,8 @@ def algorithm_Malgrange(matrix):
 
         print(forward_closure)
         print(reverse_closure)
-        new_step.nodes = list(all_vertex)
+        # готовим граф
+        new_step.nodes = all_vertex
         for i in all_vertex:
             new_step.node_options[i] = f'label: "x{i}"'
         for i in forward_closure:
@@ -128,4 +130,13 @@ def algorithm_Malgrange(matrix):
             tracked_vertex.remove(element)
         steps.append(new_step)
     print(graph_class_arr)
+    new_step = Step(True)
+    new_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины закончились. Алгоритм завершён</p>'
+    new_step.nodes = all_vertex
+    new_step.edges = edges
+    new_step.step_label = 'Завершение алгоритма'
+    for i in all_vertex:
+        new_step.node_options[i] = f'label: "x{i}"'
+        new_step.node_options[i] += f', "color": "#BCBCBC"'
+    steps.append(new_step)
     return steps

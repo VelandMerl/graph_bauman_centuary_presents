@@ -57,7 +57,7 @@ def hello_world():
     
     # getdata()
     # input, steps, last = algorithm(session['matrix'])
-    matrix = [ [0, 0, 1, 0, 0], [0, 0, 0, 1, 0], [1, 1, 0, 0, 0], [0, 1, 0, 0, 0], [0, 0, 0, 0, 0] ]
+    matrix = [ [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0] ]
     steps = sc.algorithm_Malgrange(matrix)
     return render_template("main.html", title = 'Мальгранж', steps = steps)
     # return render_template("main.html", title = 'Графы')
