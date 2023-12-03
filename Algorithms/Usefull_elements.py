@@ -1,7 +1,7 @@
 class Step:
     def __init__(self, flag=False):
-        self.text = "Default text for step"
-        self.step_label = "Default text for step label" # Приписка к шагу
+        self.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Default text for step</p>'
+        self.step_label = 'Default text for step label' # Приписка к шагу
         self.nodes = [] # вершины
         self.node_options = {} # доп опции вершин
         self.edges = {} # ребра. Формат: (from, to): weight
@@ -9,7 +9,7 @@ class Step:
         self.general_options = 'width: 1200 + "px", height: 400 + "px"' # опции для всего холста
         if flag:
           self.general_options += ', edges: { arrows: { to: { enabled: true } } }'
-    text = "Default text for step"
+    text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Default text for step</p>'
     step_label = "Default text for step label" # Приписка к шагу
     nodes = [] # вершины
     node_options = {} # доп опции вершин

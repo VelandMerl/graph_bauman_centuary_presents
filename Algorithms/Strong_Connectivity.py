@@ -1,4 +1,4 @@
-from Algorithms.Usefull_elements import Step, intersection, addition, get_edges
+from Algorithms.Usefull_elements import Step, intersection, addition, get_edges, invert_Graph
 # Серые - больше не рассматриваются untracked_vertex
 # Синие - можно только добраться forward_closure
 # Зелёные - можно до них добраться и от них добраться equivalence_class
@@ -21,6 +21,14 @@ def algorithm_Malgrange(matrix):
     for i in range(0, size_of_matrix):
         tracked_vertex.append(i)
         all_vertex.append(i)
+    
+    alg_input = Step(True)
+    alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Всё верно, это граф по введённой матрице</p>'
+    alg_input.nodes = all_vertex
+    alg_input.edges = edges
+    for i in all_vertex:
+        alg_input.node_options[i] = f'label: "x{i}"'
+        alg_input.node_options[i] += f', "color": "#FFFFFF"'
     
     queue = []
     finished = []
@@ -139,4 +147,71 @@ def algorithm_Malgrange(matrix):
         new_step.node_options[i] = f'label: "x{i}"'
         new_step.node_options[i] += f', "color": "#BCBCBC"'
     steps.append(new_step)
-    return steps
+    return [ alg_input, steps ]
+
+def algorithm_Kosaraju(matrix):
+    size_of_matrix = len(matrix)
+    steps = []
+    edges = get_edges(matrix)
+    marks = []
+    for i in range(size_of_matrix):
+        marks.append('?')
+    queue = []
+    
+    iterator = 0
+
+    visited = []
+
+    for vertex in range(0, size_of_matrix):
+        if vertex in visited: continue
+        queue.clear()
+        queue.append(vertex)
+        while len(queue) > 0:
+            curr_vertex = queue.pop()
+            if not(curr_vertex in visited):
+                for i in range(size_of_matrix):
+                    if matrix[curr_vertex][i] > 0 and marks[i] == '?':
+                        queue.append(curr_vertex)
+                        queue.append(i)
+                    visited.append(curr_vertex)
+            iterator += 1
+            marks[curr_vertex] = iterator
+    
+    print(marks)
+
+    invert_matrix = invert_Graph(matrix)
+
+    graph_class_arr = []
+    print(graph_class_arr)
+
+    queue = []
+    visited = []
+
+    vertex_mark_list = []
+
+    for i in range(size_of_matrix):
+        vertex_mark_list.append((i, marks[i]))
+    
+    vertex_mark_list.sort(key = lambda x: (x[1], x[0]), reverse = True)
+    print(vertex_mark_list)
+
+    while len(vertex_mark_list) > 0:
+        curr_vertex = vertex_mark_list.pop(0)[0]
+        if curr_vertex in visited: continue
+
+        graph_class = []
+        graph_class.append(curr_vertex)
+        visited.append(curr_vertex)
+        queue.clear()
+        queue.append(curr_vertex)
+        while len(queue) > 0:
+            curr_vertex = queue.pop()
+            for i in range(size_of_matrix):
+                if invert_matrix[curr_vertex][i] > 0 and not (i in visited):
+                    queue.append(i)
+                    graph_class.append(i)
+                    visited.append(i)
+        graph_class_arr.append(graph_class)
+    
+    print(graph_class_arr)
+    
