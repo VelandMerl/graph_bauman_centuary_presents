@@ -303,7 +303,7 @@ def algorithm_Kosaraju(matrix):
     vertex_mark_list.sort(key = lambda x: (x[1], x[0]), reverse = True)
     print(vertex_mark_list)
 
-    hue_step = 0.05 # шаг hue меняет цвет
+    hue_step = 0.08 # шаг hue меняет цвет
 
     while len(vertex_mark_list) > 0:
         
@@ -326,9 +326,11 @@ def algorithm_Kosaraju(matrix):
             new_step.node_options[i] = f'label: "x{i} | {marks[i]}"'
             new_step.node_options[i] += f', shape: "circle"'
             if i in not_visited:
-                new_step.node_options[i] += f', "color": "#E9636E"'
+                new_step.node_options[i] += f', "color": "#FFFFFF"'
             else:
-                new_step.node_options[i] += f', "color": "#AED585"'
+                for color_offset in range(len(graph_class_arr)):
+                    if i in graph_class_arr[color_offset]:
+                        new_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
         steps.append(new_step)
 
         graph_class = []
@@ -356,8 +358,11 @@ def algorithm_Kosaraju(matrix):
             new_step.step_label = f"Выделение компонентов сильной связности. Обход в глубину от вершины x<sub>{class_vertex}</sub>"
             new_step.text = start_stack
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Возьмём вершину из стека. Это оказалась вершина x<sub>{curr_vertex}</sub></p>'
-            new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Рассмотрим вершину x<sub>{curr_vertex}. Добавим её в компоненту сильной связности C<sub>x<sub>{class_vertex}</sub></sub></p>'
-            new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соседние вершины, не добавленные в компоненты сильной связности: {vertex_list_to_str(added_to_class)}. Добавим их в стек обхода</p>'
+            new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Рассмотрим вершину x<sub>{curr_vertex}</sub>. Добавим её в компоненту сильной связности C<sub>x<sub>{class_vertex}</sub></sub></p>'
+            if len(added_to_class) == 0:
+                new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Нет соседних вершин, не добавленных в компоненты сильной связности: {vertex_list_to_str(added_to_class)}</p>'
+            else:
+                new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соседние вершины, не добавленные в компоненты сильной связности: {vertex_list_to_str(added_to_class)}. Добавим их в стек обхода</p>'
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Состояние стека обхода графа в глубину в конце шага: {vertex_list_to_str(queue)} &#9668; Вершина стека</p>'
             new_step.nodes = all_vertex
             new_step.edges = inverted_edges
@@ -365,9 +370,15 @@ def algorithm_Kosaraju(matrix):
                 new_step.node_options[i] = f'label: "x{i} | {marks[i]}"'
                 new_step.node_options[i] += f', shape: "circle"'
                 if i in not_visited:
-                    new_step.node_options[i] += f', "color": "#E9636E"'
+                    new_step.node_options[i] += f', "color": "#FFFFFF"'
                 else:
-                    new_step.node_options[i] += f', "color": "#AED585"'
+                    color_offset = 0
+                    for color_offset in range(len(graph_class_arr)):
+                        if i in graph_class_arr[color_offset]:
+                            new_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
+                    color_offset += 1
+                    if i in graph_class:
+                        new_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
             steps.append(new_step)
         graph_class_arr.append(graph_class)
         new_step = Step()
@@ -387,11 +398,16 @@ def algorithm_Kosaraju(matrix):
     for graph_class in graph_class_arr:
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">C<sub>x<sub>{graph_class[0]}</sub></sub> = {vertex_list_to_str(graph_class)}</p>'
     new_step.nodes = all_vertex
-    new_step.edges = edges
+    new_step.edges = inverted_edges
     for i in all_vertex:
         new_step.node_options[i] = f'label: "x{i} | {marks[i]}"'
         new_step.node_options[i] += f', shape: "circle"'
-        new_step.node_options[i] += f', "color": "#AED585"'
+        if i in not_visited:
+            new_step.node_options[i] += f', "color": "#FFFFFF"'
+        else:
+            for color_offset in range(len(graph_class_arr)):
+                if i in graph_class_arr[color_offset]:
+                    new_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
     steps.append(new_step)   
 
 
