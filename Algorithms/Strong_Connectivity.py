@@ -223,7 +223,7 @@ def algorithm_Kosaraju(matrix):
         not_visited = addition(all_vertex, visited)
         visited.sort()
         not_visited.sort()
-        new_step.step_label = f"Разметка графа. Начало обхода в глубину от вершины x<sub>{vertex}</sub>"
+        new_step.step_label = f"Разметка графа. Начало обхода в глубину от вершины x{vertex}"
         new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины с метками: {vertex_list_to_str(visited)}</p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">В графе остались вершины без меток: {vertex_list_to_str(not_visited)}</p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим в стек обхода вершину x<sub>{vertex}</sub> и выполним обход графа в глубину</p>'
@@ -260,7 +260,7 @@ def algorithm_Kosaraju(matrix):
             set_mark_text += '</p>'
             # формирование шага для обхода в глубину
             new_step = Step(True, True)
-            new_step.step_label = f"Разметка графа. Обход в глубину от вершины x<sub>{vertex}</sub>"
+            new_step.step_label = f"Разметка графа. Обход в глубину от вершины x{vertex}"
             new_step.text = start_stack
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Возьмём вершину из стека. Это оказалась вершина x<sub>{curr_vertex}</sub></p>'
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Рассмотрим вершину x<sub>{curr_vertex}</sub></p>'
@@ -285,7 +285,7 @@ def algorithm_Kosaraju(matrix):
             
             steps.append(new_step)
         new_step = Step()
-        new_step.step_label = f"Разметка графа. Конец обхода в глубину от вершины x<sub>{vertex}</sub>"
+        new_step.step_label = f"Разметка графа. Конец обхода в глубину от вершины x{vertex}"
         new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Стек обхода графа в глубину пуст.</p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Конец обхода графа в глубину от вершины x<sub>{vertex}</sub></p>'
         steps.append(new_step)
@@ -348,7 +348,7 @@ def algorithm_Kosaraju(matrix):
         not_visited = addition(all_vertex, visited)
         visited.sort()
         not_visited.sort()
-        new_step.step_label = f"Выделение компонентов сильной связности. Начало обхода в глубину от вершины x<sub>{curr_vertex}</sub>"
+        new_step.step_label = f"Выделение компонентов сильной связности. Начало обхода в глубину от вершины x{curr_vertex}"
         new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины, добавленные в компоненты сильной связности: {vertex_list_to_str(visited)}</p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины, не добавленные в компоненты сильной связности: {vertex_list_to_str(not_visited)}</p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим в стек обхода вершину с наибольшей меткой, то есть вершину x<sub>{curr_vertex}</sub> и выполним обход графа в глубину</p>'
@@ -388,7 +388,7 @@ def algorithm_Kosaraju(matrix):
             not_visited = addition(all_vertex, visited)
             visited.sort()
             not_visited.sort()
-            new_step.step_label = f"Выделение компонентов сильной связности. Обход в глубину от вершины x<sub>{class_vertex}</sub>"
+            new_step.step_label = f"Выделение компонентов сильной связности. Обход в глубину от вершины x{class_vertex}"
             new_step.text = start_stack
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Возьмём вершину из стека. Это оказалась вершина x<sub>{curr_vertex}</sub></p>'
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Рассмотрим вершину x<sub>{curr_vertex}</sub>. Добавим её в компоненту сильной связности C<sub>x<sub>{class_vertex}</sub></sub></p>'
@@ -415,7 +415,7 @@ def algorithm_Kosaraju(matrix):
             steps.append(new_step)
         graph_class_arr.append(graph_class)
         new_step = Step()
-        new_step.step_label = f"Выделение компонентов сильной связности. Конец обхода в глубину от вершины x<sub>{class_vertex}</sub>"
+        new_step.step_label = f"Выделение компонентов сильной связности. Конец обхода в глубину от вершины x{class_vertex}"
         new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Стек обхода графа в глубину пуст.</p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Конец выделения компоненты сильной связности от вершины x<sub>{vertex}</sub></p>'
         new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Получена компонента C<sub>x<sub>{class_vertex}</sub></sub> = {vertex_list_to_str(graph_class)}</p>'
