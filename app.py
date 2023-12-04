@@ -59,9 +59,29 @@ def hello_world():
     # input, steps, last = algorithm(session['matrix'])
     matrix = [ [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0] ]
     # alg_input, steps = sc.algorithm_Malgrange(matrix)
-    alg_input, steps = sc.algorithm_Kosaraju(matrix)
-    return render_template("main.html", title = 'Мальгранж', alg_input = alg_input, steps = steps)
+    alg_input, steps, alg_result = sc.algorithm_Kosaraju(matrix)
+    return render_template("main.html", title = 'Мальгранж', alg_input = alg_input, steps = steps, alg_result = alg_result)
     # return render_template("main.html", title = 'Графы')
+
+@app.route('/Malgrange')
+def Malgrange():
+    
+    # getdata()
+    # input, steps, last = algorithm(session['matrix'])
+    matrix = [ [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0] ]
+    alg_input, steps, alg_result = sc.algorithm_Malgrange(matrix)
+    # alg_input, steps, alg_result = sc.algorithm_Kosaraju(matrix)
+    return render_template("main.html", title = 'Мальгранж', alg_input = alg_input, steps = steps, alg_result = alg_result)
+
+@app.route('/Kosaraju')
+def Kosaraju():
+    
+    # getdata()
+    # input, steps, last = algorithm(session['matrix'])
+    matrix = [ [0, 0, 1, 0, 0, 0], [0, 0, 0, 1, 0, 0], [1, 1, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0], [0, 0, 0, 1, 0, 0] ]
+    # alg_input, steps = sc.algorithm_Malgrange(matrix)
+    alg_input, steps, alg_result = sc.algorithm_Kosaraju(matrix)
+    return render_template("main.html", title = 'Косарайю', alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 @app.route("/index")
 def index():

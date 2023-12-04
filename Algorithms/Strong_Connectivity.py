@@ -83,21 +83,17 @@ def algorithm_Malgrange(matrix):
 
         # forward_closure line
         line = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Г<sup>n</sup><sub>x<sub>{vertex_to_review}</sub></sub> = '
-        forward_line = '{ '
-        forward_line += f'x<sub>{forward_closure[0]}</sub>'
-        for i in range(1, len(forward_closure)):
-            forward_line += f', x<sub>{forward_closure[i]}</sub>'
-        forward_line += ' }'
+
+        forward_line = vertex_list_to_str(forward_closure)
+
         line += forward_line
         line += '</p>'
         new_step.text += line
         # reverse_closure line
         line = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Г<sup>-n</sup><sub>x<sub>{vertex_to_review}</sub></sub> = '
-        reverse_line = '{ '
-        reverse_line += f'x<sub>{reverse_closure[0]}</sub>'
-        for i in range(1, len(reverse_closure)):
-            reverse_line += f', x<sub>{reverse_closure[i]}</sub>'
-        reverse_line += ' }'
+        
+        reverse_line = vertex_list_to_str(reverse_closure)
+
         line += reverse_line
         line += '</p>'
         new_step.text += line
@@ -152,7 +148,37 @@ def algorithm_Malgrange(matrix):
         new_step.node_options[i] += f', shape: "circle"'
         new_step.node_options[i] += f', "color": "#BCBCBC"'
     steps.append(new_step)
-    return [ alg_input, steps ]
+    hue_step = 0.08 # шаг hue меняет цвет
+    alg_result = []
+    result_step = Step(True, True)
+    result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Компоненты сильной связности:</p>'
+    for graph_class in graph_class_arr:
+        result_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">C<sub>x<sub>{graph_class[0]}</sub></sub> = {vertex_list_to_str(graph_class)}</p>'
+    result_step.nodes = all_vertex
+    result_step.edges = edges
+    for i in all_vertex:
+        result_step.node_options[i] = f'label: "x{i}"'
+        result_step.node_options[i] += f', shape: "circle"'
+        
+        for color_offset in range(len(graph_class_arr)):
+            if i in graph_class_arr[color_offset]:
+                result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
+    alg_result.append(result_step)
+    result_step = Step(True, True)
+    result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Граф компонент сильной связности:</p>'
+    for i in graph_class_arr:
+        result_step.nodes.append(i[0])
+    
+    result_step.edges = edges
+    for i in result_step.nodes:
+        result_step.node_options[i] = f'label: "C | x{i}"'
+        result_step.node_options[i] += f', shape: "circle"'
+        
+        for color_offset in range(len(graph_class_arr)):
+            if i in graph_class_arr[color_offset]:
+                result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
+    alg_result.append(result_step)
+    return [ alg_input, steps, alg_result ]
 
 ####################################################################################################
 ####################################################################################################
@@ -413,4 +439,37 @@ def algorithm_Kosaraju(matrix):
 
     print(graph_class_arr)
     
-    return [ alg_input, steps ]
+    alg_result = []
+    result_step = Step(True, True)
+    result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Компоненты сильной связности:</p>'
+    for graph_class in graph_class_arr:
+        result_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">C<sub>x<sub>{graph_class[0]}</sub></sub> = {vertex_list_to_str(graph_class)}</p>'
+    result_step.nodes = all_vertex
+    result_step.edges = edges
+    for i in all_vertex:
+        result_step.node_options[i] = f'label: "x{i}"'
+        result_step.node_options[i] += f', shape: "circle"'
+        if i in not_visited:
+            result_step.node_options[i] += f', "color": "#FFFFFF"'
+        else:
+            for color_offset in range(len(graph_class_arr)):
+                if i in graph_class_arr[color_offset]:
+                    result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
+    alg_result.append(result_step)
+    result_step = Step(True, True)
+    result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Граф компонент сильной связности:</p>'
+    for i in graph_class_arr:
+        result_step.nodes.append(i[0])
+    
+    result_step.edges = edges
+    for i in result_step.nodes:
+        result_step.node_options[i] = f'label: "C | x{i}"'
+        result_step.node_options[i] += f', shape: "circle"'
+        if i in not_visited:
+            result_step.node_options[i] += f', "color": "#FFFFFF"'
+        else:
+            for color_offset in range(len(graph_class_arr)):
+                if i in graph_class_arr[color_offset]:
+                    result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
+    alg_result.append(result_step)
+    return [ alg_input, steps, alg_result]

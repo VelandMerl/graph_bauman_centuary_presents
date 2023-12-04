@@ -7,6 +7,39 @@
     <div class="flex flex-col justify-center items-center">
 
         <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Решение</h1>
+        {% for result in alg_result %}
+          {% set i = loop.index %}
+          {{ result.text|safe }}
+          {% if result.enable_graph %}<div id="network_result_{{ i }}"></div> {% endif %}
+          {% if result.enable_graph %}
+            <script type="text/javascript">
+                // create an array with nodes
+                var nodes = new vis.DataSet([
+                {% for node in result.nodes %}
+                  { id: {{ node }} , {{ result.node_options[node]|safe }} },
+                {% endfor %}
+                ]);
+          
+                // create an array with edges
+                var edges = new vis.DataSet([
+                {% for edge in result.edges.keys() %}
+                  { from: {{ edge[0] }}, to: {{ edge[1] }}, label: "{{ result.edges[edge] }}", {{ result.edge_options[edge]|safe }} },
+                {% endfor %}
+                ]);
+          
+                // create a network
+                var container = document.getElementById("network_result_{{ i }}");
+                var data = {
+                  nodes: nodes,
+                  edges: edges,
+                };
+                var options = {
+                    {{ result.general_options|safe }}
+                };
+                var network = new vis.Network(container, data, options);
+              </script>
+          {% endif %}
+        {% endfor %}
         <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Исходные данные</h1>
         <div id="network_input"></div>
         {{ alg_input.text|safe }}
@@ -129,6 +162,40 @@
 
         <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Ответ</h1>
         
+        {% for result in alg_result %}
+          {% set i = loop.index %}
+          {{ result.text|safe }}
+          {% if result.enable_graph %}<div id="network_end_result_{{ i }}"></div> {% endif %}
+          {% if result.enable_graph %}
+            <script type="text/javascript">
+                // create an array with nodes
+                var nodes = new vis.DataSet([
+                {% for node in result.nodes %}
+                  { id: {{ node }} , {{ result.node_options[node]|safe }} },
+                {% endfor %}
+                ]);
+          
+                // create an array with edges
+                var edges = new vis.DataSet([
+                {% for edge in result.edges.keys() %}
+                  { from: {{ edge[0] }}, to: {{ edge[1] }}, label: "{{ result.edges[edge] }}", {{ result.edge_options[edge]|safe }} },
+                {% endfor %}
+                ]);
+          
+                // create a network
+                var container = document.getElementById("network_end_result_{{ i }}");
+                var data = {
+                  nodes: nodes,
+                  edges: edges,
+                };
+                var options = {
+                    {{ result.general_options|safe }}
+                };
+                var network = new vis.Network(container, data, options);
+              </script>
+          {% endif %}
+        {% endfor %}
+
     </div> 
 </div>
 

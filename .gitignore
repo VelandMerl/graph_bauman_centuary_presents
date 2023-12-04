@@ -3,3 +3,4 @@ static/dist/css/output.css
 __pycache__ 
 static/images/*
 SC_test.py
+.idea/
