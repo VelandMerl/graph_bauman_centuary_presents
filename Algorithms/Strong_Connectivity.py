@@ -99,11 +99,8 @@ def algorithm_Malgrange(matrix):
         new_step.text += line
 
         # equivalence_class line
-        class_line = '{ '
-        class_line += f'x<sub>{equivalence_class[0]}</sub>'
-        for i in range(1, len(equivalence_class)):
-            class_line += f', x<sub>{equivalence_class[i]}</sub>'
-        class_line += ' }'
+        class_line = vertex_list_to_str(equivalence_class)
+
 
         line = f'<p class="mb-2 text-gray-500 dark:text-gray-400">C<sub>x<sub>{vertex_to_review}</sub></sub> = '
         line += f'Г<sup>n</sup><sub>x<sub>{vertex_to_review}</sub></sub> &cap; Г<sup>-n</sup><sub>x<sub>{vertex_to_review}</sub></sub> = '
@@ -169,7 +166,17 @@ def algorithm_Malgrange(matrix):
     for i in graph_class_arr:
         result_step.nodes.append(i[0])
     
-    result_step.edges = edges
+    graph_class_edges = {}
+    for graph_class in graph_class_arr:
+        for i in graph_class:
+            for j in range(size_of_matrix):
+                if matrix[i][j] > 0 and not (j in graph_class):
+                    for each_class in graph_class_arr:
+                        if j in each_class:
+                            graph_class_edges[(graph_class[0], each_class[0])] = matrix[i][j]
+                            break
+    result_step.edges = graph_class_edges
+
     for i in result_step.nodes:
         result_step.node_options[i] = f'label: "C | x{i}"'
         result_step.node_options[i] += f', shape: "circle"'
@@ -461,7 +468,17 @@ def algorithm_Kosaraju(matrix):
     for i in graph_class_arr:
         result_step.nodes.append(i[0])
     
-    result_step.edges = edges
+    graph_class_edges = {}
+    for graph_class in graph_class_arr:
+        for i in graph_class:
+            for j in range(size_of_matrix):
+                if matrix[i][j] > 0 and not (j in graph_class):
+                    for each_class in graph_class_arr:
+                        if j in each_class:
+                            graph_class_edges[(graph_class[0], each_class[0])] = matrix[i][j]
+                            break
+    result_step.edges = graph_class_edges
+
     for i in result_step.nodes:
         result_step.node_options[i] = f'label: "C | x{i}"'
         result_step.node_options[i] += f', shape: "circle"'
