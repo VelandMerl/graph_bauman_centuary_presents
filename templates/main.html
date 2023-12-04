@@ -37,6 +37,9 @@
                     {{ result.general_options|safe }}
                 };
                 var network = new vis.Network(container, data, options);
+                network.on("resize", function (ctx) {
+                  this.fit();
+                });
               </script>
           {% endif %}
         {% endfor %}
@@ -68,6 +71,9 @@
               {{ alg_input.general_options|safe }}
           };
           var network = new vis.Network(container, data, options);
+          network.on("resize", function (ctx) {
+            this.fit();
+          });
         </script>
         
         <div id="accordion-open" data-accordion="open" class="w-full">
@@ -138,6 +144,9 @@
                         {{ step.general_options|safe }}
                     };
                     var network = new vis.Network(container, data, options);
+                    network.on("resize", function (ctx) {
+                      this.fit();
+                    });
                   </script>
                   {% endif %}
             {% endfor %}
@@ -176,6 +185,9 @@
                     {{ result.general_options|safe }}
                 };
                 var network = new vis.Network(container, data, options);
+                network.on("resize", function (ctx) {
+                  this.fit();
+                });
               </script>
           {% endif %}
         {% endfor %}
