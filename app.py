@@ -141,7 +141,7 @@ def prim_input():
 @app.route('/prim/result')
 def prim_result():
     time.sleep(2)
-    alg_input, steps, alg_result = Kolya.kraskal(session.get("matrix"))
+    alg_input, steps, alg_result = Kolya.prim(session.get("matrix"))
 
     return render_template("main.html", title = 'Прим', alg_input = alg_input, steps = steps, alg_result = alg_result)
 
