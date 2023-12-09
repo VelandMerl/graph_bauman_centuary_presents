@@ -128,10 +128,8 @@ def kraskal_input():
 @app.route('/kraskal/result')
 def kraskal_result():
     time.sleep(2)
-    steps = Kolya.kraskal(session.get("matrix"))
-    print(f'Данные из сессии в другой функции: {session.get("matrix")}') # тестовая печать данных из сессии
-
-    return render_template("Kolya/kraskal_result.html", title = 'Краскал', steps = steps)
+    alg_input, steps, alg_result = Kolya.kraskal(session.get("matrix"))
+    return render_template("main.html", title = 'Краскал', alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 # Алгоритм Прима
 # страница с вводом матрицы смежности
@@ -143,9 +141,9 @@ def prim_input():
 @app.route('/prim/result')
 def prim_result():
     time.sleep(2)
-    steps = Kolya.prim(session.get("matrix"))
+    alg_input, steps, alg_result = Kolya.kraskal(session.get("matrix"))
 
-    return render_template("Kolya/prim_result.html", title = 'Прим', steps = steps)
+    return render_template("main.html", title = 'Прим', alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 
 if __name__ == '__main__':
