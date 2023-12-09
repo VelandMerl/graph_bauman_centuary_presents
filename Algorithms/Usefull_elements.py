@@ -1,5 +1,5 @@
 class Step:
-    def __init__(self, enable_graph_flag = False, arrow_flag=False):
+    def __init__(self, enable_graph_flag = False, arrow_flag = False, enable_table_flag = False):
         self.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Default text for step</p>'
         self.step_label = 'Default text for step label' # Приписка к шагу
         self.nodes = [] # вершины
@@ -10,6 +10,8 @@ class Step:
         if arrow_flag:
             self.general_options += ', edges: { arrows: { to: { enabled: true } } }'
         self.enable_graph = enable_graph_flag
+        self.enable_table = enable_table_flag
+        self.matrix = []
     text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Default text for step</p>'
     step_label = "Default text for step label" # Приписка к шагу
     nodes = [] # вершины
@@ -18,6 +20,8 @@ class Step:
     edge_options = {} # Опции рёбер. Формат (from, to): options(как строка)
     general_options = 'width: 1200 + "px", height: 400 + "px"' # опции для всего холста
     enable_graph = False
+    enable_table = False
+    matrix = []
 
 # объединение
 def intersection(A, B):

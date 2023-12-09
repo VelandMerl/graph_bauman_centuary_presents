@@ -22,7 +22,19 @@ def algorithm_Malgrange(matrix):
         tracked_vertex.append(i)
         all_vertex.append(i)
     
-    alg_input = Step(True, True)
+    alg_input = Step(True, True, True)
+    first_line = []
+    first_line.append('')
+    for i in range(0, size_of_matrix):
+        first_line.append(f'x{i}')
+    alg_input.matrix.append(list(first_line))
+    for i in range(0, size_of_matrix):
+        next_line = []
+        next_line.append(f'x{i}')
+        next_line += (list(matrix[i]))
+        alg_input.matrix.append(list(next_line))
+    for i in range(1, size_of_matrix+1):
+        alg_input.matrix[i][i] = -1
     alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Всё верно, это граф по введённой матрице</p>'
     alg_input.nodes = all_vertex
     alg_input.edges = edges
@@ -202,7 +214,19 @@ def algorithm_Kosaraju(matrix):
         marks.append('?')
         all_vertex.append(i)
     
-    alg_input = Step(True, True)
+    alg_input = Step(True, True, True)
+    first_line = []
+    first_line.append('')
+    for i in range(0, size_of_matrix):
+        first_line.append(f'x{i}')
+    alg_input.matrix.append(list(first_line))
+    for i in range(0, size_of_matrix):
+        next_line = []
+        next_line.append(f'x{i}')
+        next_line += (list(matrix[i]))
+        alg_input.matrix.append(list(next_line))
+    for i in range(1, size_of_matrix+1):
+        alg_input.matrix[i][i] = -1
     alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Всё верно, это граф по введённой матрице</p>'
     alg_input.nodes = all_vertex
     alg_input.edges = edges
