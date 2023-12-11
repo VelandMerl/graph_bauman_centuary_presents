@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from datetime import timedelta
 import Algorithms.Kirill as Kirill # импорт модуля Кирилла
-import Algorithms.Kolya as Kolya # импорт модуля Кирилла
+import Algorithms.Minimal_spanning_tree as Kolya # импорт модуля Кирилла
 import Algorithms.Strong_Connectivity as sc # импорт модуля Кирилла
 
 import time
