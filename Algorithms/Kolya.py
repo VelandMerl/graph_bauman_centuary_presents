@@ -172,8 +172,7 @@ def prim(input_matrix):
     steps = [] 
 
     while len(U) < N:
-        r = get_min(R, U)
-        print(r)       
+        r = get_min(R, U)     
         if r[0] == math.inf:    
             break
         if not(r[1] in U) :
