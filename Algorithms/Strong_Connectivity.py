@@ -213,7 +213,7 @@ def algorithm_Malgrange(matrix):
     result_step = Step(True, True, True)
     for i in prev_matrix:
         result_step.matrix.append(list(i))
-    result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Граф компонент сильной связности:</p>'
+    result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Граф компонент сильной связности и таблица:</p>'
     for i in graph_class_arr:
         result_step.nodes.append(i[0])
     
