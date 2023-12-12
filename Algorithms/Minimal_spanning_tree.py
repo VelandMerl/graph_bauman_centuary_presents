@@ -3,17 +3,29 @@ from flask import session
 from Algorithms.Usefull_elements import Step, get_edges, vertex_list_to_str
 import math
 
-def convert(input):
+def convert_krask(input):
     N = len (input)
     result = []
     for i in range(N):
         for j in range(i+1, N):
-            result.append((input[i][j], i, j))
+            if input[i][j] != 0:
+                result.append((input[i][j], i, j))
+    return result
+
+def convert_prim(input):
+    N = len (input)
+    result = []
+    for i in range(N):
+        for j in range(i+1, N):
+                if input[i][j] > 0:
+                    result.append((input[i][j], i, j))
+                else:
+                    result.append((999999999999, i, j))
     return result
 
 
 def kraskal(input_matrix):
-    R = convert(input_matrix)
+    R = convert_krask(input_matrix)
 
     Rs = sorted(R, key=lambda x: x[0])
     U = set()  # список соединенных вершин
@@ -89,6 +101,9 @@ def kraskal(input_matrix):
 
     for r in Rs:    # проходим по ребрам второй раз и объединяем разрозненные группы вершин
         if r[2] not in D[r[1]]:     # если вершины принадлежат разным группам, то объединяем
+            for i in D[r[1]]:
+                if r[2] not in D[i]:
+                    D[i] += D[r[2]]
             T.append(r)             # добавляем ребро в остов
             gr1 = D[r[1]]
             D[r[1]] += D[r[2]]      # объединим списки двух групп вершин
@@ -133,7 +148,7 @@ def get_min(R, U):
     return rm
 
 def prim(input_matrix):
-    R = convert(input_matrix)
+    R = convert_prim(input_matrix)
     all_vertex = []
     N = len(input_matrix)
     steps = []

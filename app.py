@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, session
 from datetime import timedelta
 import Algorithms.Kirill as Kirill # импорт модуля Кирилла
-import Algorithms.Minimal_spanning_tree as Kolya # импорт модуля Кирилла
+import Algorithms.Minimal_spanning_tree as st # импорт модуля Кирилла
 import Algorithms.Strong_Connectivity as sc # импорт модуля Кирилла
 
 import time
@@ -128,7 +128,7 @@ def kraskal_input():
 @app.route('/kraskal/result')
 def kraskal_result():
     time.sleep(2)
-    alg_input, steps, alg_result = Kolya.kraskal(session.get("matrix"))
+    alg_input, steps, alg_result = st.kraskal(session.get("matrix"))
     return render_template("main.html", title = 'Краскал', alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 # Алгоритм Прима
@@ -141,7 +141,7 @@ def prim_input():
 @app.route('/prim/result')
 def prim_result():
     time.sleep(2)
-    alg_input, steps, alg_result = Kolya.prim(session.get("matrix"))
+    alg_input, steps, alg_result = st.prim(session.get("matrix"))
 
     return render_template("main.html", title = 'Прим', alg_input = alg_input, steps = steps, alg_result = alg_result)
 
