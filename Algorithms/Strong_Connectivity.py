@@ -125,8 +125,6 @@ def algorithm_Malgrange(matrix):
         new_step.text += line
         graph_class_arr.append(equivalence_class)
 
-        print(forward_closure)
-        print(reverse_closure)
         # готовим граф
         new_step.nodes = all_vertex
         for i in all_vertex:
@@ -140,10 +138,8 @@ def algorithm_Malgrange(matrix):
                 new_step.node_options[i] += f', "color": "#B900FF"'
         for i in equivalence_class:
             new_step.node_options[i] += f', "color": "#2B912D"'
-        print(untracked_vertex)
         for i in untracked_vertex:
             new_step.node_options[i] += f', "color": "#BCBCBC"'
-        print(unreachable_vertex)
         for i in unreachable_vertex:
             new_step.node_options[i] += f', "color": "#FF2400"'
 
@@ -174,7 +170,6 @@ def algorithm_Malgrange(matrix):
             prev_matrix.append(list(i))
         
         steps.append(new_step)
-    print(graph_class_arr)
     new_step = Step(True, True, True)
     closure_line = []
     closure_line.append('')
@@ -367,9 +362,6 @@ def algorithm_Kosaraju(matrix):
         new_step.node_options[i] += f', shape: "circle"'
         new_step.node_options[i] += f', "color": "#AED585"'
     steps.append(new_step)   
-        
-    
-    print(marks)
 
     invert_matrix = invert_Graph(matrix, size_of_matrix)
     inverted_edges = get_edges(invert_matrix)
@@ -386,7 +378,6 @@ def algorithm_Kosaraju(matrix):
     steps.append(new_step)   
 
     graph_class_arr = []
-    print(graph_class_arr)
 
     queue = []
     visited = []
@@ -397,7 +388,6 @@ def algorithm_Kosaraju(matrix):
         vertex_mark_list.append((i, marks[i]))
     
     vertex_mark_list.sort(key = lambda x: (x[1], x[0]), reverse = True)
-    print(vertex_mark_list)
 
     hue_step = 0.08 # шаг hue меняет цвет
 
@@ -441,7 +431,6 @@ def algorithm_Kosaraju(matrix):
             if curr_vertex in visited: continue
             graph_class.append(curr_vertex)
             visited.append(curr_vertex)
-            print(curr_vertex)
             for i in range(size_of_matrix):
                 if invert_matrix[curr_vertex][i] > 0 and not (i in visited):
                     queue.append(i)
@@ -507,7 +496,6 @@ def algorithm_Kosaraju(matrix):
     steps.append(new_step)   
 
 
-    print(graph_class_arr)
     
     alg_result = []
     result_step = Step(True, True)
