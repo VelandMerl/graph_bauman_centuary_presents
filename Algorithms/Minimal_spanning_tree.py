@@ -25,13 +25,12 @@ def convert_prim(input):
 
 
 def kraskal(input_matrix):
-    R = convert_krask(input_matrix)
+    working_matrix = convert_krask(input_matrix)
 
-    Rs = sorted(R, key=lambda x: x[0])
-    U = set()  # список соединенных вершин
-    D = {}      # словарь списка изолированных групп вершин
-    T = []      # список ребер остова
-    DI = {}     # словарь ребер
+    Rs = sorted(working_matrix, key=lambda x: x[0])
+    nodes = set()  
+    Dic = {}         
+    dictionary = {}     
     steps = [] 
     all_vertex = []
     size_of_matrix = len(input_matrix)
@@ -64,27 +63,26 @@ def kraskal(input_matrix):
         alg_input.node_options[i] += f', shape: "circle"'
         alg_input.node_options[i] += f', "color": "#FFFFFF"'
 
-    for r in Rs:
-        if r[1] not in U or r[2] not in U:  # проверка для исключения циклов в остове
-            if r[1] not in U and r[2] not in U: # если обе вершины не соединены, то
-                D[r[1]] = [r[1], r[2]]          # формируем в словаре ключ с номерами вершин
-                D[r[2]] = D[r[1]]               # и связываем их с одним и тем же списком вершин
-            else:                           # иначе
-                if not D.get(r[1]):             # если в словаре нет первой вершины, то
-                    D[r[2]].append(r[1])        # добавляем в список первую вершину
-                    D[r[1]] = D[r[2]]           # и добавляем ключ с номером первой вершины
+    for edge in Rs:
+        if edge[1] not in nodes or edge[2] not in nodes:  
+            if edge[1] not in nodes and edge[2] not in nodes:
+                Dic[edge[1]] = [edge[1], edge[2]]         
+                Dic[edge[2]] = Dic[edge[1]]               
+            else:                           
+                if not Dic.get(edge[1]):             
+                    Dic[edge[2]].append(edge[1])    
+                    Dic[edge[1]] = Dic[edge[2]]         
                 else:
-                    D[r[1]].append(r[2])        # иначе, все то же самое делаем со второй вершиной
-                    D[r[2]] = D[r[1]]
-
-            T.append(r)             # добавляем ребро в остов
-            U.add(r[1])             # добавляем вершины в множество U
-            U.add(r[2])
-            U1 = list(U)            # создаем список добавленных в остов вершин
-            DI[(r[1],r[2])] = r[0]  # создаем словарь ребер добавленных в остов
+                    Dic[edge[1]].append(edge[2])       
+                    Dic[edge[2]] = Dic[edge[1]]
+      
+            nodes.add(edge[1])          
+            nodes.add(edge[2])
+            U1 = list(nodes)         
+            dictionary[(edge[1],edge[2])] = edge[0]  
 
             A = Step(True)     
-            A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим ребро [{r[1]},{r[2]}], так как оно имеет наименьший вес из всех ребер соединяющих две разные вершины, одна из которых содержится в нашем подграфе, а вторая - еще нет.</p>'
+            A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим ребро [{edge[1]},{edge[2]}], так как оно имеет наименьший вес из всех ребер соединяющих две разные вершины, одна из которых содержится в нашем подграфе, а вторая - еще нет.</p>'
             A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соединенные вершины: {vertex_list_to_str(U1)}</p>'
             A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины до сих пор не включенные в остов: {vertex_list_to_str(list(set(all_vertex) - set(U1)))}</p>'
             A.nodes = list(U1)
@@ -92,45 +90,44 @@ def kraskal(input_matrix):
             for i in U1:
                 A.node_options[i] = f'label: "x{i}"'
                 A.node_options[i] += f', shape: "circle"'
-                if i == r[1] or i == r[2]:
+                if i == edge[1] or i == edge[2]:
                     A.node_options[i] += f', "color": "#ADFF2F"'
                 else:
                     A.node_options[i] += f', "color": "#FFFFFF"'
-            A.edges = dict(DI) 
+            A.edges = dict(dictionary) 
             steps.append(A)
 
-    for r in Rs:    # проходим по ребрам второй раз и объединяем разрозненные группы вершин
-        if r[2] not in D[r[1]]:     # если вершины принадлежат разным группам, то объединяем
-            for i in D[r[1]]:
-                if r[2] not in D[i]:
-                    D[i] += D[r[2]]
-            T.append(r)             # добавляем ребро в остов
-            gr1 = D[r[1]]
-            D[r[1]] += D[r[2]]      # объединим списки двух групп вершин
-            D[r[2]] += gr1
+    for edge in Rs:    
+        if edge[2] not in Dic[edge[1]]:     
+            for i in Dic[edge[1]]:
+                if edge[2] not in Dic[i]:
+                    Dic[i] += Dic[edge[2]]
+            gr1 = Dic[edge[1]]
+            Dic[edge[1]] += Dic[edge[2]]      
+            Dic[edge[2]] += gr1
 
-            DI[(r[1],r[2])] = r[0]    # создаем словарь ребер добавленных в остов
+            dictionary[(edge[1],edge[2])] = edge[0]   
             B = Step(True)   
             B.step_label = 'Объединение компонент связности ребрами минимального размера.' 
-            B.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим ребро [{r[1]},{r[2]}], так как оно имеет наименьший вес из всех ребер соединяющих получившиеся компоненты связности.</p>'
+            B.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим ребро [{edge[1]},{edge[2]}], так как оно имеет наименьший вес из всех ребер соединяющих получившиеся компоненты связности.</p>'
             B.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соединенные вершины: {vertex_list_to_str(U1)}</p>'
             B.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины до сих пор не включенные в остов: {vertex_list_to_str(list(set(all_vertex) - set(U1)))}</p>'
             B.nodes = list(U1)
             for i in U1:
                 B.node_options[i] = f'label: "x{i}"'
                 B.node_options[i] += f', shape: "circle"'
-                if i == r[1] or i == r[2]:
+                if i == edge[1] or i == edge[2]:
                     B.node_options[i] += f', "color": "#ADFF2F"'
                 else:
                     B.node_options[i] += f', "color": "#FFFFFF"'
-            B.edges = dict(DI) 
+            B.edges = dict(dictionary) 
             steps.append(B)
 
     alg_result = []
     result_step = Step(True)
     result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Получившийся минимальный остов:</p>'
     result_step.nodes = U1
-    result_step.edges = DI
+    result_step.edges = dictionary
     for i in U1:
             result_step.node_options[i] = f'label: "x{i}"'
             result_step.node_options[i] += f', shape: "circle"'
@@ -138,17 +135,16 @@ def kraskal(input_matrix):
     alg_result.append(result_step)
     return [alg_input,steps,alg_result]
 
-def get_min(R, U):
+def get_min(working_matrix, nodes):
     rm = (math.inf, -1, -1)
-    for v in U:
-        rr = min(R, key=lambda x: x[0] if (x[1] == v or x[2] == v) and (x[1] not in U or x[2] not in U) else math.inf)
+    for v in nodes:
+        rr = min(working_matrix, key=lambda x: x[0] if (x[1] == v or x[2] == v) and (x[1] not in nodes or x[2] not in nodes) else math.inf)
         if rm[0] > rr[0]:
             rm = rr
-
     return rm
 
 def prim(input_matrix):
-    R = convert_prim(input_matrix)
+    working_matrix = convert_prim(input_matrix)
     all_vertex = []
     N = len(input_matrix)
     steps = []
@@ -180,28 +176,26 @@ def prim(input_matrix):
         alg_input.node_options[i] += f', shape: "circle"'
         alg_input.node_options[i] += f', "color": "#FFFFFF"'
     
-    R.append((math.inf, -1, -1))
-    U = {0}   
-    T = []    
-    DI = {}     
+    working_matrix.append((math.inf, -1, -1))
+    nodes = {0}    
+    dictionary = {}     
     steps = [] 
 
-    while len(U) < N:
-        r = get_min(R, U)     
-        if r[0] == math.inf:    
+    while len(nodes) < N:
+        edge = get_min(working_matrix, nodes)     
+        if edge[0] == math.inf:    
             break
-        if not(r[1] in U) :
-            gr_node = r[1]
-        if not(r[2] in U):
-            gr_node = r[2]
-        T.append(r)            
-        U.add(r[1])             
-        U.add(r[2])
-        DI[(r[1],r[2])] = r[0]
-        U1 = list(U)
+        if not(edge[1] in nodes) :
+            gr_node = edge[1]
+        if not(edge[2] in nodes):
+            gr_node = edge[2]         
+        nodes.add(edge[1])             
+        nodes.add(edge[2])
+        dictionary[(edge[1],edge[2])] = edge[0]
+        U1 = list(nodes)
 
         A = Step(True)            
-        A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим вершину {gr_node}, соединенную минимальным из оставшихся ребром [{r[1]},{r[2]}], имеющим вес {r[0]}</p>'
+        A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим вершину {gr_node}, соединенную минимальным из оставшихся ребром [{edge[1]},{edge[2]}], имеющим вес {edge[0]}</p>'
         A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соединенные вершины: {vertex_list_to_str(U1)}</p>'
         A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины до сих пор не включенные в остов: {vertex_list_to_str(list(set(all_vertex) - set(U1)))}</p>'
         A.nodes = list(U1)
@@ -213,14 +207,14 @@ def prim(input_matrix):
                 A.node_options[i] += f', "color": "#ADFF2F"'
             else:
                 A.node_options[i] += f', "color": "#FFFFFF"' 
-        A.edges = dict(DI) 
+        A.edges = dict(dictionary) 
         steps.append(A)
 
     alg_result = []
     result_step = Step(True)
     result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Получившийся минимальный остов:</p>'
     result_step.nodes = U1
-    result_step.edges = DI
+    result_step.edges = dictionary
     for i in U1:
         result_step.node_options[i] = f'label: "x{i}"'
         result_step.node_options[i] += f', shape: "circle"'
