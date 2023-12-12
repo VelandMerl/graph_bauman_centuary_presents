@@ -43,7 +43,7 @@
               </script>
           {% endif %}
           {% if result.enable_table %}
-            <div id="result_table_{{loop.index}}" class="w-1/5">
+            <div id="result_table_{{loop.index}}"  class="lg:w-1/5 md:w-1/5 sm:w-1/5">
             <table class="table-auto border">
                 <tbody>
                   {% for line in result.matrix %}
@@ -60,7 +60,7 @@
         {% endfor %}
         <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Исходные данные</h1>
         {% if alg_input.enable_table %}
-          <div id="input_table" class="w-1/5">
+          <div id="input_table"  >
           <table class="table-auto border">
               <tbody>
                 {% for line in alg_input.matrix %}
@@ -106,7 +106,7 @@
           });
         </script>
         
-        <div id="accordion-open" data-accordion="open" class="w-full">
+        <div id="accordion-open" data-accordion="open" class="w-full mb-2">
             {% for step in steps %}
                 {% set i = loop.index %}
                 {% if i == 1 %}
@@ -126,7 +126,7 @@
                             {{ step.text|safe }}
                             {% if step.enable_graph %}<div id="network_step_{{ i }}"></div> {% endif %}
                             {% if step.enable_table %}
-                              <div id="step_table_{{i}}" class="w-1/5">
+                              <div id="step_table_{{i}}"  class="lg:w-1/5 md:w-1/5 sm:w-1/5" >
                               <table class="table-auto border">
                                   <tbody>
                                     {% for line in step.matrix %}
@@ -159,7 +159,7 @@
                             <p class="mb-2 text-gray-500 dark:text-gray-400">{{ step.text|safe }}</p>
                             {% if step.enable_graph %} <div id="network_step_{{ i }}"></div> {% endif %}
                             {% if step.enable_table %}
-                              <div id="step_table_{{i}}" class="w-1/5">
+                              <div id="step_table_{{i}}"  class="lg:w-1/5 md:w-1/5 sm:w-1/5" >
                               <table class="table-auto border">
                                   <tbody>
                                     {% for line in step.matrix %}
@@ -251,7 +251,7 @@
               </script>
           {% endif %}
           {% if result.enable_table %}
-            <div id="end_result_table_{{loop.index}}" class="w-1/5">
+            <div id="end_result_table_{{loop.index}}"  class="lg:w-1/5 md:w-1/5 sm:w-1/5" >
             <table class="table-auto border">
                 <tbody>
                   {% for line in result.matrix %}
