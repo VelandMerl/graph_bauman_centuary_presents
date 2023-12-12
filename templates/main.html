@@ -44,12 +44,12 @@
           {% endif %}
           {% if result.enable_table %}
             <div id="result_table_{{loop.index}}" class="w-1/5">
-            <table class="table-fixed border">
+            <table class="table-auto border">
                 <tbody>
                   {% for line in result.matrix %}
                     <tr class="border">
                       {% for col in line %}
-                        <td class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{col}}{% endif %}</td>
+                        <td nowrap class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{ col|safe }}{% endif %}</td>
                       {% endfor %}
                     </tr>
                   {% endfor %}
@@ -61,12 +61,12 @@
         <h1 class="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">Исходные данные</h1>
         {% if alg_input.enable_table %}
           <div id="input_table" class="w-1/5">
-          <table class="table-fixed border">
+          <table class="table-auto border">
               <tbody>
                 {% for line in alg_input.matrix %}
                   <tr class="border">
                     {% for col in line %}
-                      <td class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{col}}{% endif %}</td>
+                      <td nowrap class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{ col|safe }}{% endif %}</td>
                     {% endfor %}
                   </tr>
                 {% endfor %}
@@ -127,12 +127,12 @@
                             {% if step.enable_graph %}<div id="network_step_{{ i }}"></div> {% endif %}
                             {% if step.enable_table %}
                               <div id="step_table_{{i}}" class="w-1/5">
-                              <table class="table-fixed border">
+                              <table class="table-auto border">
                                   <tbody>
                                     {% for line in step.matrix %}
                                       <tr class="border">
                                         {% for col in line %}
-                                          <td class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{col}}{% endif %}</td>
+                                          <td nowrap class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{ col|safe }}{% endif %}</td>
                                         {% endfor %}
                                       </tr>
                                     {% endfor %}
@@ -160,12 +160,12 @@
                             {% if step.enable_graph %} <div id="network_step_{{ i }}"></div> {% endif %}
                             {% if step.enable_table %}
                               <div id="step_table_{{i}}" class="w-1/5">
-                              <table class="table-fixed border">
+                              <table class="table-auto border">
                                   <tbody>
                                     {% for line in step.matrix %}
                                       <tr class="border">
                                         {% for col in line %}
-                                          <td class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{col}}{% endif %}</td>
+                                          <td nowrap class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{ col|safe }}{% endif %}</td>
                                         {% endfor %}
                                       </tr>
                                     {% endfor %}
@@ -252,12 +252,12 @@
           {% endif %}
           {% if result.enable_table %}
             <div id="end_result_table_{{loop.index}}" class="w-1/5">
-            <table class="table-fixed border">
+            <table class="table-auto border">
                 <tbody>
                   {% for line in result.matrix %}
                     <tr class="border">
                       {% for col in line %}
-                        <td class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{col}}{% endif %}</td>
+                        <td nowrap class="border {% if col == -1 %}bg-gray-500{% endif %} text-black dark:text-white">{% if col != 0 and col != -1 %}{{ col|safe }}{% endif %}</td>
                       {% endfor %}
                     </tr>
                   {% endfor %}

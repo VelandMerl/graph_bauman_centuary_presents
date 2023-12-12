@@ -6,7 +6,7 @@ class Step:
         self.node_options = {} # доп опции вершин
         self.edges = {} # ребра. Формат: (from, to): weight
         self.edge_options = {} # Опции рёбер. Формат (from, to): options(как строка)
-        self.general_options = 'width: "100%", height: 400 + "px", interaction: { navigationButtons: true, keyboard: true, }' # опции для всего холста
+        self.general_options = 'width: "100%", height: 400 + "px", interaction: { navigationButtons: true, }' # опции для всего холста
         if arrow_flag:
             self.general_options += ', edges: { arrows: { to: { enabled: true } } }'
         self.enable_graph = enable_graph_flag

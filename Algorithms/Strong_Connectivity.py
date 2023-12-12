@@ -26,11 +26,11 @@ def algorithm_Malgrange(matrix):
     first_line = []
     first_line.append('')
     for i in range(0, size_of_matrix):
-        first_line.append(f'x{i}')
+        first_line.append(f'x<sub>{i}</sub>')
     alg_input.matrix.append(list(first_line))
     for i in range(0, size_of_matrix):
         next_line = []
-        next_line.append(f'x{i}')
+        next_line.append(f'x<sub>{i}</sub>')
         next_line += (list(matrix[i]))
         alg_input.matrix.append(list(next_line))
     for i in range(1, size_of_matrix+1):
@@ -45,9 +45,13 @@ def algorithm_Malgrange(matrix):
     
     queue = []
     finished = []
-
+    prev_matrix = []
+    for i in alg_input.matrix:
+        prev_matrix.append(list(i))
     while len(tracked_vertex) > 0:
-        new_step = Step(True, True)
+        new_step = Step(True, True, True)
+        for i in prev_matrix:
+            new_step.matrix.append(list(i))
         new_step.edges = edges
         new_step.step_label = ''
         forward_closure.clear()
@@ -145,9 +149,42 @@ def algorithm_Malgrange(matrix):
 
         for element in graph_class_arr[len(graph_class_arr)-1]:
             tracked_vertex.remove(element)
+
+        position = len(new_step.matrix[1])
+        for i in range(size_of_matrix):
+            if i in forward_closure:
+                new_step.matrix[i+1].append(f'&#10004;')
+            elif i in untracked_vertex:
+                new_step.matrix[i+1].append('/')
+            else:
+                new_step.matrix[i+1].append('&#10006;')
+        closure_line = []
+        closure_line.append(f'Г<sup>-n</sup><sub>х<sub>{vertex_to_review}</sub></sub>')
+        for i in range(size_of_matrix):
+            if i in reverse_closure:
+                closure_line.append(f'&#10004;')
+            elif i in untracked_vertex:
+                closure_line.append('/')
+            else:
+                closure_line.append('&#10006;')
+        new_step.matrix.append(closure_line)
+        new_step.matrix[0].append(f'Г<sup>n</sup><sub>х<sub>{vertex_to_review}</sub></sub>')
+        prev_matrix = []
+        for i in new_step.matrix:
+            prev_matrix.append(list(i))
+        
         steps.append(new_step)
     print(graph_class_arr)
-    new_step = Step(True, True)
+    new_step = Step(True, True, True)
+    closure_line = []
+    closure_line.append('')
+    for i in range(size_of_matrix):
+        closure_line.append('/')
+    prev_matrix.append(closure_line)
+    for i in range(size_of_matrix):
+        prev_matrix[i+1].append('&nbsp;&nbsp;/&nbsp;')
+    for i in prev_matrix:
+        new_step.matrix.append(list(i))
     new_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины закончились. Алгоритм завершён</p>'
     new_step.nodes = all_vertex
     new_step.edges = edges
@@ -173,7 +210,9 @@ def algorithm_Malgrange(matrix):
             if i in graph_class_arr[color_offset]:
                 result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
     alg_result.append(result_step)
-    result_step = Step(True, True)
+    result_step = Step(True, True, True)
+    for i in prev_matrix:
+        result_step.matrix.append(list(i))
     result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Граф компонент сильной связности:</p>'
     for i in graph_class_arr:
         result_step.nodes.append(i[0])
