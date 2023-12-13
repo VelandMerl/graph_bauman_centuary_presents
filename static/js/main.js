@@ -1,6 +1,29 @@
 // просьба сильно не редачить эту красоту :)
 
-// считывание матрицы для обработк
+// функция смены шаблона страницы ввода алгоритма
+var route = {
+    dm: '/topological_sort/demukron',
+    dfs: '/topological_sort/depth_first_search',
+    ml: '/strong_connectivity/malgrange',
+    ks: '/strong_connectivity/kosaraju',
+    pr: '/minimal_spanning_tree/prim',
+    kr: '/minimal_spanning_tree/kraskal'
+};
+function changeTemplate(id, text)
+{
+    var title = document.querySelector('.algorithmTitle'); // получени элемента по имени класса
+    if (title) {
+        title.textContent = text; // смена заголовка
+        title.id = id;
+    }
+
+    var link = document.getElementById('getResult');
+    if (link) {
+        link.href = route[id]
+    }
+}
+
+// считывание матрицы для обработки
 function get_matrix()
 {
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
@@ -35,6 +58,19 @@ function get_matrix()
         },
         body: JSON.stringify(dataToSend) // отправляем данные
     })
+
+    document.getElementById('sendMatrixBtn').classList.add('hidden') // прячем кнопку ввода матрицы
+    // создание ссылки на результат
+    var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
+    var link = document.createElement('a');
+    link.id = 'getResult';
+    link.className = 'block text-center font-medium text-blue-600 dark:text-blue-500 hover:underline';
+    link.textContent = 'Посмотреть результат';
+
+    var title = document.querySelector('.algorithmTitle'); // получени элемента по имени класса
+    link.href = route[title.id]
+
+    matrixContainer.appendChild(link); // добавление ссылки на страницу
 }
 
 // формирование таблицы
@@ -42,8 +78,10 @@ function get_matrix()
 // bin = false/true - обычная с весами/бинарная
 function show_matrix(blockDiag = false, bin = false)
 {
+    //var myData = {{ session['size'] | tojson | safe }}; // Использование переменной Python в JavaScript
+
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
-        document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
+    document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
 
     var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
 
@@ -60,7 +98,8 @@ function show_matrix(blockDiag = false, bin = false)
     // Заголовки столбцов (вершины)
     for (var i = 1; i <= size; i++) {
         var vertexHeaderCell = document.createElement('td');
-        vertexHeaderCell.textContent = 'x' + i;
+        index = i - 1;
+        vertexHeaderCell.textContent = 'x' + index;
         headerRow.appendChild(vertexHeaderCell);
     }
     thead.appendChild(headerRow);
@@ -71,7 +110,8 @@ function show_matrix(blockDiag = false, bin = false)
     for (var i = 1; i <= size; i++) {
         var row = document.createElement('tr');
         var vertexCell = document.createElement('td');
-        vertexCell.textContent = 'x' + i; // подписи вершин (строки)
+        index = i - 1;
+        vertexCell.textContent = 'x' + index; // подписи вершин (строки)
         row.appendChild(vertexCell);
 
         // Ячейки матрицы для ввода данных (input)
@@ -116,9 +156,9 @@ function show_matrix(blockDiag = false, bin = false)
     button.textContent = 'Enter';
     button.addEventListener('click', function() {
         get_matrix(); // добавление функции get_matrix()
-        var currentPath = window.location.pathname; // получаем текущий путь
-        var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
-        window.location.href = resPath; // переход к результату по нажатию кнопки
+        // var currentPath = window.location.pathname; // получаем текущий путь
+        // var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
+        // window.location.href = resPath; // переход к результату по нажатию кнопки
     });
 
     matrixContainer.appendChild(button); // добавление кнопки на страницу

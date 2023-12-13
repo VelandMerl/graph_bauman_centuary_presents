@@ -1,3 +1,5 @@
+import re
+
 class Step:
     def __init__(self, enable_graph_flag = False, arrow_flag = False, enable_table_flag = False):
         self.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Default text for step</p>'
@@ -78,3 +80,7 @@ def hsv_to_rgb(hue, saturation, value):
 def hsv_to_hex(hue, saturation, value):
     rgb = hsv_to_rgb(hue, saturation, value)
     return rgb_to_hex(rgb[0], rgb[1],rgb[2])
+
+def replace_color(str, new_color):
+    # замена значения "color" в строке с помощью регулярного выражения
+    return re.sub(r'"color"\s*:\s*"\#[A-Fa-f0-9]*"', f'"color": "{new_color}"', str)

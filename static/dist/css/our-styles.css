@@ -13,3 +13,21 @@ input[type="text"] {
     text-align: center;
     box-sizing: border-box;
 }
+
+.card-container {
+    width: 50%; /* Ширина блока 80% от ширины страницы */
+    margin: 0 auto; /* Центрирование блока */
+    padding-bottom: 20px;
+}
+
+#dropdownHoverButton {
+    border: none;
+    cursor: pointer;
+}
+#dropdownHoverButton:focus + #dropdownHover,
+#dropdownHover:hover {
+    display: block;
+}
+#dropdownHover {
+    min-width: 120px;
+}
