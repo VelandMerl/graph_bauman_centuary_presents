@@ -189,7 +189,7 @@ def algorithm_Malgrange(matrix):
         new_step.node_options[i] += f', shape: "circle"'
         new_step.node_options[i] += f', "color": "#BCBCBC"'
     steps.append(new_step)
-    hue_step = 0.08 # шаг hue меняет цвет
+    hue_step = 0.1 # шаг hue меняет цвет
     alg_result = []
     result_step = Step(True, True)
     result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Компоненты сильной связности:</p>'
@@ -203,7 +203,7 @@ def algorithm_Malgrange(matrix):
         
         for color_offset in range(len(graph_class_arr)):
             if i in graph_class_arr[color_offset]:
-                result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 1)}"'
+                result_step.node_options[i] += f', "color": "{hsv_to_hex(color_offset * hue_step, 1, 0.9)}"'
     alg_result.append(result_step)
     result_step = Step(True, True, True)
     for i in prev_matrix:
@@ -389,7 +389,7 @@ def algorithm_Kosaraju(matrix):
     
     vertex_mark_list.sort(key = lambda x: (x[1], x[0]), reverse = True)
 
-    hue_step = 0.08 # шаг hue меняет цвет
+    hue_step = 0.1 # шаг hue меняет цвет
 
     while len(vertex_mark_list) > 0:
         
