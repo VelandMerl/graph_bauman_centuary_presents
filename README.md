@@ -3,6 +3,6 @@
 
 npm install - установка недостающих node_modules
 
-npx tailwindcss -i ./static/src/input.css -o ./static/dist/css/output.css - компиляция классов tailwind
+npm run compile-css - компиляция классов tailwind
 
 py app.py
