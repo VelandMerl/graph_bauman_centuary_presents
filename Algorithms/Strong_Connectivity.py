@@ -309,11 +309,14 @@ def algorithm_Kosaraju(matrix):
             not_marked_neighbor = []
             if not(curr_vertex in visited):
                 set_mark_text += f'У данной вершины нет метки. Значение итератора равно {iterator}. Дадим вершине х<sub>{curr_vertex}</sub> метку {iterator}.'
-                for i in range(size_of_matrix):
-                    if matrix[curr_vertex][i] > 0 and marks[i] == '?':
-                        queue.append(curr_vertex)
-                        queue.append(i)
-                        not_marked_neighbor.append(i)
+            else:
+                set_mark_text += f'У данной вершины уже есть метка. Значение итератора равно {iterator}. Дадим вершине х<sub>{curr_vertex}</sub> новую метку {iterator}.'
+            for i in range(size_of_matrix):
+                if matrix[curr_vertex][i] > 0 and marks[i] == '?':
+                    
+                    # queue.append(i)
+                    not_marked_neighbor.append(i)
+                
                 visited.append(curr_vertex)
             set_mark_text += '</p>'
             # формирование шага для обхода в глубину
@@ -327,7 +330,10 @@ def algorithm_Kosaraju(matrix):
                 new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Непомеченных соседних вершин нет. Значит, в стек обхода текущую вершину x<sub>{curr_vertex}</sub> не добавляем.</p>'
             else:
                 new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Непомеченные соседние вершины: {vertex_list_to_str(not_marked_neighbor)}</p>'
-                new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Поскольку есть непомеченные соседние вершины, то сохраняем текущую вершину x<sub>{curr_vertex}</sub> в стек обхода. После этого добавляем непомеченные соседние вершины</p>'
+                vertex_to_stack = not_marked_neighbor[0]
+                new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Поскольку есть непомеченные соседние вершины, то сохраняем текущую вершину x<sub>{curr_vertex}</sub> в стек обхода. После этого добавим одну из непомеченных соседних вершин, например, x<sub>{vertex_to_stack}</sub></p>'
+                queue.append(curr_vertex)
+                queue.append(vertex_to_stack)
             new_step.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Состояние стека обхода графа в глубину в конце шага: {vertex_list_to_str(queue)} &#9668; Вершина стека</p>'
             new_step.nodes = all_vertex
             new_step.edges = edges
@@ -433,7 +439,7 @@ def algorithm_Kosaraju(matrix):
             graph_class.append(curr_vertex)
             visited.append(curr_vertex)
             for i in range(size_of_matrix):
-                if invert_matrix[curr_vertex][i] > 0 and not (i in visited) and (vertex_mark[curr_vertex][1] - vertex_mark[i][1] == 1):
+                if invert_matrix[curr_vertex][i] > 0 and not (i in visited):
                     queue.append(i)
                     added_to_class.append(i)
 
