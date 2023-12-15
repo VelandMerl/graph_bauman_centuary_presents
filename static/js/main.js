@@ -9,7 +9,47 @@ var route = {
     pr: '/minimal_spanning_tree/prim',
     kr: '/minimal_spanning_tree/kraskal'
 };
-function changeTemplate(id, text)
+
+
+function setDbdata(id)
+{
+    dbData = { "status": true }
+
+    // отправляем информацию на сервер
+    fetch('/set_dbdata', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json' // заголовок для корректного распознавания даннных на сервере
+        },
+        body: JSON.stringify(dbData) // отправляем данные
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Произошла ошибка при получении данных');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Действия с полученными данными data
+        console.log('Данные успешно получены:', data);
+        // Перенаправление на другую страницу
+        window.location.href = route[id];
+    })
+    .catch(error => {
+        console.error('Произошла ошибка:', error);
+    });
+}
+
+    // .then(response => response.json())
+    // .then(data => {
+    //     var desc = document.getElementById('alg_desc');
+    //     desc.textContent = data.db_alg // обновление содержимого элемента с id 'alg_desc'
+    // })
+    // .catch(error => {
+    //     console.error('Произошла ошибка при получении данных:', error);
+    // });
+
+function changeTemplate(id, id_desc, text)
 {
     var title = document.querySelector('.algorithmTitle'); // получени элемента по имени класса
     if (title) {
@@ -21,11 +61,31 @@ function changeTemplate(id, text)
     if (link) {
         link.href = route[id]
     }
+
+    // Получить все элементы <p> внутри <div> с классом algorithmDesc
+    var desc = document.querySelectorAll('.algorithmDesc');
+
+    // Перебрать полученные элементы и скрыть их
+    if (desc.length > 0) {
+        // Перебрать полученные элементы и добавить класс 'hidden', чтобы скрыть их
+        desc.forEach(function(element) {
+            element.classList.add('hidden'); // Добавить класс 'hidden' для скрытия элементов <p>
+        });
+    } else {
+        console.log('Элементы не найдены'); // Вывести сообщение об отсутствии элементов
+    }
+    document.getElementById(id_desc).classList.remove('hidden')
 }
 
 // считывание матрицы для обработки
 function get_matrix()
 {
+    // отключение ввода
+    var inputs = document.querySelectorAll('#matrix-table input[type="text"], #matrix-table input[type="checkbox"]');
+    inputs.forEach(function(input) {
+        input.disabled = true; // отключить возможность ввода
+    });
+
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
 
     var matrixData = [] // пустая матрица
@@ -59,18 +119,37 @@ function get_matrix()
         body: JSON.stringify(dataToSend) // отправляем данные
     })
 
-    document.getElementById('sendMatrixBtn').classList.add('hidden') // прячем кнопку ввода матрицы
-    // создание ссылки на результат
-    var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
-    var link = document.createElement('a');
-    link.id = 'getResult';
-    link.className = 'block text-center font-medium text-blue-600 dark:text-blue-500 hover:underline';
-    link.textContent = 'Посмотреть результат';
+    document.getElementById('send-btnContainer').classList.add('hidden') // прячем кнопки ввода матрицы
 
-    var title = document.querySelector('.algorithmTitle'); // получени элемента по имени класса
-    link.href = route[title.id]
+    var buttonContainer = document.getElementById('change-btnContainer');
+    buttonContainer.classList.remove('hidden')
 
-    matrixContainer.appendChild(link); // добавление ссылки на страницу
+}
+
+// изменение матрицы
+function edit_matrix(clear = true) 
+{
+    var inputs = document.querySelectorAll('#matrix-table input[type="text"], #matrix-table input[type="checkbox"]');
+    if (clear) {
+        inputs.forEach(function(input) {
+            input.value = ''; // очистить содержимое input
+            input.checked = false; // снять галочку, если это checkbox
+        });   
+    } else {
+        inputs.forEach(function(input) {
+            if (!input.classList.contains('blocked'))
+                input.disabled = false; // включить возможность ввода
+        });
+        document.getElementById('send-btnContainer').classList.remove('hidden') // возвращаем кнопки ввода матрицы
+        document.getElementById('change-btnContainer').classList.add('hidden') // прячем кнопки получения результата
+    }
+}
+
+function back_to_size() 
+{
+    document.getElementById('changeMatrixSizeLink').classList.add('hidden')
+    document.getElementById('matrix_input').classList.add('hidden')
+    document.getElementById('matrix_size_div').classList.remove('hidden')
 }
 
 // формирование таблицы
@@ -78,12 +157,21 @@ function get_matrix()
 // bin = false/true - обычная с весами/бинарная
 function show_matrix(blockDiag = false, bin = false)
 {
-    //var myData = {{ session['size'] | tojson | safe }}; // Использование переменной Python в JavaScript
+    sizeButton = document.getElementById('changeMatrixSizeLink')
+    sizeButton.classList.remove('hidden')
+    sizeButton.addEventListener('click', function() {
+        back_to_size(); // добавление функции get_matrix()
+    });
 
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
     document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
 
     var matrixContainer = document.getElementById('matrix_input'); // блок для вставки матрицы
+    matrixContainer.innerHTML = ''
+    matrixContainer.classList.remove('hidden')
+    matrixContainer.classList.add('flex', 'flex-col', 'justify-center', 'items-center', 'mb-5');
+    matrixContainer.style.width = '100px';
+
 
     // создаем таблицу для матрицы смежности
     var table = document.createElement('table');
@@ -100,6 +188,7 @@ function show_matrix(blockDiag = false, bin = false)
         var vertexHeaderCell = document.createElement('td');
         index = i - 1;
         vertexHeaderCell.textContent = 'x' + index;
+        vertexHeaderCell.classList.add('dark:text-gray-400')
         headerRow.appendChild(vertexHeaderCell);
     }
     thead.appendChild(headerRow);
@@ -112,6 +201,7 @@ function show_matrix(blockDiag = false, bin = false)
         var vertexCell = document.createElement('td');
         index = i - 1;
         vertexCell.textContent = 'x' + index; // подписи вершин (строки)
+        vertexCell.classList.add('dark:text-gray-400')
         row.appendChild(vertexCell);
 
         // Ячейки матрицы для ввода данных (input)
@@ -123,9 +213,12 @@ function show_matrix(blockDiag = false, bin = false)
             else
                 input.type = 'checkbox';
             input.name = 'matrixCell' + i + '_' + j;
+            input.classList.add('dark:bg-gray-800') 
             if (blockDiag && i == j) { // блокировка диагонали
                 input.disabled = true;
                 input.value = 0;
+                input.className = "blocked"
+                input.classList.add('bg-gray-500') 
             } 
             cell.appendChild(input);
             row.appendChild(cell);
@@ -148,48 +241,68 @@ function show_matrix(blockDiag = false, bin = false)
         }
     });
 
+    var buttonContainer = document.createElement('div');
+    buttonContainer.id = "send-btnContainer"
+    buttonContainer.className = 'flex items-center justify-between'; // используем flex для размещения кнопок
+
     // создание кнопки ввода
     var button = document.createElement('button');
     button.id = 'sendMatrixBtn';
     button.type = 'button';
-    button.className = 'text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2';
-    button.textContent = 'Enter';
+    button.className = 'text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 mt-2 text-center' ;
+    button.textContent = 'Ввести';
     button.addEventListener('click', function() {
         get_matrix(); // добавление функции get_matrix()
-        // var currentPath = window.location.pathname; // получаем текущий путь
-        // var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
-        // window.location.href = resPath; // переход к результату по нажатию кнопки
     });
 
-    matrixContainer.appendChild(button); // добавление кнопки на страницу
+    // создание кнопки очитски
+    var clearButton = document.createElement('button');
+    clearButton.id = 'clearMatrixBtn';
+    clearButton.type = 'button';
+    clearButton.className = "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" ;
+    clearButton.textContent = 'Очистить';
+    clearButton.addEventListener('click', function() {
+        edit_matrix(); // добавление функции edit_matrix()
+    });
+
+    buttonContainer.appendChild(clearButton); // Добавление кнопки "Ввести" в контейнер
+    buttonContainer.appendChild(button); // Добавление кнопки "Очистить" в контейнер
+    matrixContainer.appendChild(buttonContainer); // Добавление контейнера с кнопками на страницу
+
+    var buttonContainer = document.createElement('div');
+    buttonContainer.id = "change-btnContainer"
+    buttonContainer.className = 'flex items-center justify-between'; // используем flex для размещения кнопок
+
+    // создание ссылки на результат
+    var link = document.createElement('a');
+    link.id = 'getResult';
+    link.className = 'block text-center font-medium text-blue-600 dark:text-blue-500 hover:underline';
+    link.textContent = 'Посмотреть результат';
+
+    var title = document.querySelector('.algorithmTitle'); // получени элемента по имени класса
+    link.href = route[title.id]
+
+    // кнопка изменения матрицы
+    var changeButton = document.createElement('button');
+    changeButton.id = 'changeMatrixBtn';
+    changeButton.type = 'button';
+    changeButton.className = "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mt-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700" ;
+    changeButton.textContent = 'Изменить';
+    changeButton.addEventListener('click', function() {
+        edit_matrix(false); // добавление функции edit_matrix()
+    });
+
+    buttonContainer.appendChild(changeButton); // Добавление кнопки "Ввести" в контейнер
+    buttonContainer.appendChild(link); // добавление ссылки на страницу
+    buttonContainer.classList.add('hidden')
+    matrixContainer.appendChild(buttonContainer); // Добавление контейнера с кнопками на страницу
 }
-
-    // // добавление кнопки ввода
-    // matrixContainer.innerHTML = matrixContainer.innerHTML + '<div><button id="sendMatrixBtn" onclick="get_matrix()" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Enter</button></div>'
-    
-    // var button = document.getElementById('sendMatrixBtn');
-
-    // // ДОБАВЛЕНИЕ ПЕРЕХОДА В СООТВЕТСТВИИ С АЛГОРИТМОМ
-    // // Добавляем обработчик события click
-    // button.addEventListener('click', function() {
-    //     var currentPath = window.location.pathname; // получаем текущий путь
-    //     var resPath = currentPath + '/result'; // добавляем "/result" к текущему пути
-    //     window.location.href = resPath; // переход к реузультату по нажатию кнопки
-    // });
-
-    //блок кода для вывода матрицы на странице с результатом
-    // if (afterInput) // если была введена матрица
-    //     var size = 2
-    // else {
-    //     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
-    //     document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
-    // }
 
 
 function change_Size(element)
 {
     var size = element.value
-    document.getElementById('label_size_of_matrix').textContent = `Select size of Matrix: ${size}`
+    document.getElementById('label_size_of_matrix').textContent = `Размер матрицы: ${size}`
 }
 
 function set_theme()

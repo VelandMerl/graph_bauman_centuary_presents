@@ -13,15 +13,3 @@ input[type="text"] {
     text-align: center;
     box-sizing: border-box;
 }
-
-#dropdownHoverButton {
-    border: none;
-    cursor: pointer;
-}
-#dropdownHoverButton:focus + #dropdownHover,
-#dropdownHover:hover {
-    display: block;
-}
-#dropdownHover {
-    min-width: 120px;
-}

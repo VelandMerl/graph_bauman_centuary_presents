@@ -8,18 +8,25 @@
 <div class="max-w-screen-xl mx-auto">
     <div class="flex flex-col items-center">
         <div class="flex items-center mb-5">
-            <h1 id="ml" class="algorithmTitle text-3xl font-bold text-gray-900 dark:text-white">Алгоритм Мальгранжа</h1> <!--id - dm - Демукрон-->
             <div class="relative ml-4">
-                <button id="dropdownHoverButton" data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="text-white bg-blue-700 hover:bg-blue-700 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg text-xs px-3 py-1.5 text-center inline-flex items-center dark:bg-transparent dark:hover:bg-blue-700 dark:focus:ring-blue-800 mr-2" type="button">▼</button>
-                <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow absolute top-full right-0 mt-2">
+                <button data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                <span id="ml" class="algorithmTitle">Алгоритм Мальгранжа</span>
+                <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                </svg>
+                </button>
+                <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ml', 'Алгоритм Мальгранжа')">Алгоритм Мальгранжа</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ks', 'Алгоритм Косарайю')">Алгоритм Косарайю</a>
-                        </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ml', 'ml_desc', 'Алгоритм Мальгранжа')">Алгоритм Мальгранжа</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ks', 'ks_desc', 'Алгоритм Косарайю')">Алгоритм Косарайю</a>
+                      </li>
                     </ul>
+                </div>
+                <div class="w-full flex justify-center items-center pt-6">
+                    <a id="changeMatrixSizeLink" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline hidden">Изменить размер матрицы</a>
                 </div>
             </div>
         </div>
@@ -27,18 +34,25 @@
     <div class="flex flex-col justify-center items-center">
         <div id="matrix_size_div" class="flex flex-col justify-center items-center mb-5 w-3/5">
             <div class="w-full mb-5">
-                <label id ="label_size_of_matrix" for="size_of_matrix" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select size of Matrix: 6</label>
+                <label id ="label_size_of_matrix" for="size_of_matrix" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Размер матрицы: 6</label>
                 <input id="range_size_of_matrix" onchange="change_Size(this)" type="range" min="2" max="10" value="6" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
             </div>
             <div>
-                <button onclick="show_matrix(true, true)" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Select</button>
+                <button onclick="show_matrix(true, true)" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Подтвердить</button>
             </div>
         </div>
         <!--изменил ширину блока-->
-        <div id="matrix_input" class="flex flex-col justify-center items-center mb-5 w-3/5" style="width: 100px">
+        <div id="matrix_input">
         </div>
-    </div> 
+    <div class="flex flex-col justify-center items-center">
+        <div id = 'ml_desc' class="algorithmDesc flex flex-col justify-center items-center">
+            <p>{{ ml_desc.dsc|safe }}</p>
+            <a id="changeMatrixSizeLink" onclick="setDbdata('ml')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
+        </div>
+        <div id = 'ks_desc' class="algorithmDesc flex flex-col justify-center items-center hidden">
+            <p>{{ ks_desc.dsc|safe }}</p>
+            <a id="changeMatrixSizeLink" onclick="setDbdata('ks')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
+        </div>
+    <div>
 </div>
-
-
 {% endblock %}
