@@ -80,7 +80,6 @@ def kraskal(input_matrix):
             nodes.add(edge[2])
             U1 = list(nodes)         
             dictionary[(edge[1],edge[2])] = edge[0]  
-
             A = Step(True)     
             A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим ребро [{edge[1]},{edge[2]}], так как оно имеет наименьший вес из всех ребер соединяющих две разные вершины, одна из которых содержится в нашем подграфе, а вторая - еще нет.</p>'
             A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соединенные вершины: {vertex_list_to_str(U1)}</p>'
@@ -122,11 +121,11 @@ def kraskal(input_matrix):
                     B.node_options[i] += f', "color": "#FFFFFF"'
             B.edges = dict(dictionary) 
             steps.append(B)
-
     alg_result = []
+    U1 = list(all_vertex)
     result_step = Step(True)
     result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Получившийся минимальный остов:</p>'
-    result_step.nodes = U1
+    result_step.nodes = list(U1)
     result_step.edges = dictionary
     for i in U1:
             result_step.node_options[i] = f'label: "x{i}"'
@@ -212,6 +211,7 @@ def prim(input_matrix):
             steps.append(A)
 
     alg_result = []
+    U1 = list(all_vertex)
     result_step = Step(True)
     result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Получившийся минимальный остов:</p>'
     result_step.nodes = U1
