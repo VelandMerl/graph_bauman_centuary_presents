@@ -5,8 +5,6 @@ import Algorithms.Minimal_spanning_tree as st # импорт модуля Кол
 
 from flask_sqlalchemy import SQLAlchemy ## имплементация бд
 
-key_alg_name_dict = {"ml": ["/strong_connectivity/malgrange", "Алгоритм Мальгранжа"], "ks": ["/strong_connectivity/kosaraju", "Алгоритм Косарайю"], "dm": ["/topological_sort/demukron", "Алгоритм Демукрона"], "dfs":["/topological_sort/depth_first_search", "Поиск в глубину"], "pr": ["/minimal_spanning_tree/prim", "Алгоритм Прима"], "kr": ["/minimal_spanning_tree/kraskal", "Алгоритм Краскала"]}
-
 
 app = Flask(__name__)
 app.config.from_object('config')
