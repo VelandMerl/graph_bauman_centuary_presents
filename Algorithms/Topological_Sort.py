@@ -1,5 +1,6 @@
 from Algorithms.Usefull_elements import Step, intersection, addition, get_edges, invert_Graph, vertex_list_to_str, hsv_to_hex, replace_color
 import copy
+from collections import defaultdict
 
 def algorithm_depth_first_search(matrix):
     mass = list() # массив смежных вершин
@@ -80,29 +81,28 @@ def algorithm_depth_first_search(matrix):
     print(f'Вершины: {all_vertex}')
 
     # исходный граф
-    alg_input = Step(True, True) # создаём первый шаг (исходный граф)
-    alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф по введённой матрице</p>' # текст шага
-    alg_input.nodes = all_vertex # список вершин
-    alg_input.edges = edges # список ребер
+    first_step = Step(True, True) # создаём первый шаг (исходный граф)
+    first_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф по введённой матрице</p>' # текст шага
+    first_step.nodes = all_vertex # список вершин
+    first_step.edges = edges # список ребер
 
     # общие опции для рёбер
     for edge in edges.keys():
-        alg_input.edge_options[edge] = 'label: "1"'
-        alg_input.edge_options[edge] += ', "color": "#1E90FF"'
-    print(f'рёбра: {alg_input.edge_options}')
+        first_step.edge_options[edge] = 'label: "1"'
+        first_step.edge_options[edge] += ', "color": "#1E90FF"'
+    print(f'рёбра: {first_step.edge_options}')
 
 
     for i in all_vertex: # метки для вершин
-        alg_input.node_options[i] = f'label: "x{i}"'
-        alg_input.node_options[i] += ', shape: "circle"'
-        alg_input.node_options[i] += ', "color": "#1E90FF"'
-
+        first_step.node_options[i] = f'label: "x{i}"'
+        first_step.node_options[i] += ', shape: "circle"'
+        first_step.node_options[i] += ', "color": "#1E90FF"'
 
     # выбор начальной вершины обхода
-    h_step = copy.deepcopy(alg_input) # создаём вспомогательный объект (шаг)
+    h_step = copy.deepcopy(first_step) # создаём вспомогательный объект (шаг)
     print(vertex)
     while vertex:
-        new_step = copy.deepcopy(alg_input) # создаём первый шаг
+        new_step = copy.deepcopy(first_step) # создаём первый шаг
         h_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Маршрут обхода: ' # текст шага
         if not dfs(0, vertex[0]): # запуск алгоритма
             loop = True
@@ -112,7 +112,7 @@ def algorithm_depth_first_search(matrix):
     if not loop:
         print('Алгоритм успешно завершен')
 
-        result_step = copy.deepcopy(alg_input)
+        result_step = copy.deepcopy(first_step)
         result_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Стек - {stack} ({stack[-1]} - вершина стека)</p>'
         result_step.text += '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф, разбитый на уровни</p>' # текст шага
         stack.reverse() # переворачиваем список для следования вершин по уровням
@@ -148,6 +148,26 @@ def algorithm_depth_first_search(matrix):
         result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400"">АЛГОРИТМ ПРЕРВАН ИЗ-ЗА НАЛИЧИЯ КОНТУРА В ГРАФЕ!</p>' # текст шага
         alg_result.append(result_step)
 
+    # добавление таблицы в исходные данные
+    alg_input = Step(True, True, True)
+    alg_input.text = copy.deepcopy(first_step.text)
+    alg_input.nodes = copy.deepcopy(first_step.nodes)
+    alg_input.edges = copy.deepcopy(first_step.edges)
+    alg_input.edge_options = copy.deepcopy(first_step.edge_options)
+    alg_input.node_options = copy.deepcopy(first_step.node_options)
+    first_line = []
+    first_line.append('')
+    for i in range(size_of_matrix):
+        first_line.append(f'x<sub>{i}</sub>')
+    alg_input.matrix.append(list(first_line))
+    for i in range(size_of_matrix):
+        next_line = []
+        next_line.append(f'x<sub>{i}</sub>')
+        next_line += (list(matrix[i]))
+        alg_input.matrix.append(list(next_line))
+    for i in range(1, size_of_matrix+1):
+        alg_input.matrix[i][i] = -1
+
     return [ alg_input, steps, alg_result ]  
     
 #########################################################################################################################
@@ -172,11 +192,29 @@ def demukron(matrix):
 
     # реализация алгоритма
     def dm(vertex):
+
+        step = Step(False, True, True) # создание первого шага
+        # формирование исходной матрицы
+        first_line = []
+        first_line.append('')
+        for i in range(size_of_matrix):
+            first_line.append(f'x<sub>{i}</sub>')
+        step.matrix.append(list(first_line))
+        for i in range(size_of_matrix):
+            next_line = []
+            next_line.append(f'x<sub>{i}</sub>')
+            next_line += (list(matrix[i]))
+            step.matrix.append(list(next_line))
+        for i in range(1, size_of_matrix+1):
+            step.matrix[i][i] = -1
+
         # формирование уровня
-        print(f'матрица {matrix}')
-        print(f'вершины {vertex}')
         level = 0
         while vertex:
+
+            step = copy.deepcopy(step)
+            step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">'
+            
             flag = False # уровень отсутствует
             level_v = set()  # вершины формируемого уровня
             for i in vertex: # просмотр столбца матрицы
@@ -194,6 +232,23 @@ def demukron(matrix):
                 return False # уровень не сформирован
             for i in level_v:
                 matrix[i] = list(map(lambda el: 0, matrix[i]))  # удаление(зануление) строки
+            
+            # удаление строки
+            for ver in level_v:
+                for i in range(1, size_of_matrix+1):
+                    step.matrix[ver+1][i] = -1
+                step.text += f'Вершина x<sub>{ver}</sub> не имеет входящих рёбер<br/>'
+            step.text += f'Формируем уровень N<sub>{level}</sub>  = ' + '{&nbsp'
+            for ver in level_v:
+                step.text += f'x<sub>{ver}</sub>&nbsp'
+            step.text += '}<br/>'
+            for ver in level_v:
+                step.text += f'Порядковая функция O(x<sub>{ver}</sub>) = {level}<br/>'
+            step.text += '</p>'
+            step.step_label = f'Формирование уровня N <sub>{level}</sub>'
+            
+            steps.append(step)
+
             print(f'матрица {matrix}')
             vertex -= level_v # исключение вершин с определённым уровнем
             level += 1
@@ -209,7 +264,7 @@ def demukron(matrix):
     all_vertex = vertex.copy() # список вершин
 
     # исходный граф
-    alg_input = Step(True, True) # создаём первый шаг (исходный граф)
+    alg_input = Step(True, True, True) # создаём первый шаг (исходный граф)
     alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф по введённой матрице</p>' # текст шага
     alg_input.nodes = all_vertex # список вершин
     alg_input.edges = edges # список ребер
@@ -220,54 +275,81 @@ def demukron(matrix):
         alg_input.edge_options[edge] += ', "color": "#1E90FF"'
     print(f'рёбра: {alg_input.edge_options}')
 
-
     for i in all_vertex: # метки для вершин
         alg_input.node_options[i] = f'label: "x{i}"'
         alg_input.node_options[i] += ', shape: "circle"'
         alg_input.node_options[i] += ', "color": "#1E90FF"'
 
+    # добавление таблицы в исходные данные
+    size_of_matrix = len(matrix)
+    first_line = []
+    first_line.append('')
+    for i in range(size_of_matrix):
+        first_line.append(f'x<sub>{i}</sub>')
+    alg_input.matrix.append(list(first_line))
+    for i in range(size_of_matrix):
+        next_line = []
+        next_line.append(f'x<sub>{i}</sub>')
+        next_line += (list(matrix[i]))
+        alg_input.matrix.append(list(next_line))
+    for i in range(1, size_of_matrix+1):
+        alg_input.matrix[i][i] = -1
+
     res = dm(vertex) # запуск алгоритма
     if res:
         print('Алгоритм успешно завершен')  
         print(f'Вершины по уровням: {vertex_level}')
+        result_step = copy.deepcopy(alg_input)
+        result_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Разделение вершин по уровням - {vertex_level})</p>'
+        result_step.text += '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф, разбитый на уровни</p>' # текст шага
+        for ver, level in vertex_level.items(): # установка уровней для вершин
+            result_step.node_options[ver] = f'label: "x{ver}"'
+            result_step.node_options[ver] += ', shape: "circle"'
+            result_step.node_options[ver] += ', "color": "#1E90FF"'
+            result_step.node_options[ver] += f', level: {level}'
+        
+        neighbor_ver = [] # пары вершин соседних уровней
+        sorted_levels = sorted(set(vertex_level.values()))  # Получение уникальных значений уровней и их сортировка
+        for level in sorted_levels[:-1]:  # Проход по уровням, исключая последний
+            current_level_vertices = [vertex for vertex, vertex_level in vertex_level.items() if vertex_level == level]  # Вершины текущего уровня
+            next_level_vertices = [vertex for vertex, vertex_level in vertex_level.items() if vertex_level == level + 1]  # Вершины следующего уровня
+            neighbor_pairs = [(v1, v2) for v1 in current_level_vertices for v2 in next_level_vertices]  # Пары соседних вершин
+            neighbor_ver.extend(neighbor_pairs)  # Добавление пар в список
+
+        result_step.general_options += ', layout: { hierarchical: { direction: "LR", levelSeparation: 100, nodeSpacing: 150} }'
+
+        print(edges)
+        print(neighbor_ver)
+        flag = True
+        for edge in edges.keys():
+            # result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", "forceDirection": "none" }, width: 1'
+            if edge in neighbor_ver:
+                result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "dynamic", roundness: 0 }, width: 1'    
+            elif flag:
+                result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCW", roundness: 0.5 }, width: 1'
+                flag = False
+            else:
+                result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", roundness: 0.5 }, width: 1'
+                flag = True
+        
+        sorted_dict = defaultdict(list)
+        for vertex, level in vertex_level.items():
+            sorted_dict[level].append(vertex)
+        sorted_dict = dict(sorted(sorted_dict.items()))
+
+        
+        result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">'
+        for level, ver in sorted_dict.items():
+            result_step.text += f'Уровень N<sub>{level}</sub>  = ' + '{&nbsp'
+            for x in (ver):
+                result_step.text += f'x<sub>{x}</sub>&nbsp'
+            result_step.text += '}<br/>'
+        result_step.text += '</p>'
+        alg_result.append(result_step)
     else:
         print('Выполнение алгоритма прервано из-за наличия контура')
-    
-    result_step = copy.deepcopy(alg_input)
-    result_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Разделение вершин по уровням - {vertex_level})</p>'
-    result_step.text += '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф, разбитый на уровни</p>' # текст шага
-    for ver, level in vertex_level.items(): # установка уровней для вершин
-        result_step.node_options[ver] = f'label: "x{ver}"'
-        result_step.node_options[ver] += ', shape: "circle"'
-        result_step.node_options[ver] += ', "color": "#1E90FF"'
-        result_step.node_options[ver] += f', level: {level}'
-    
-    neighbor_ver = [] # пары вершин соседних уровней
-    sorted_levels = sorted(set(vertex_level.values()))  # Получение уникальных значений уровней и их сортировка
-    for level in sorted_levels[:-1]:  # Проход по уровням, исключая последний
-        current_level_vertices = [vertex for vertex, vertex_level in vertex_level.items() if vertex_level == level]  # Вершины текущего уровня
-        next_level_vertices = [vertex for vertex, vertex_level in vertex_level.items() if vertex_level == level + 1]  # Вершины следующего уровня
-        neighbor_pairs = [(v1, v2) for v1 in current_level_vertices for v2 in next_level_vertices]  # Пары соседних вершин
-        neighbor_ver.extend(neighbor_pairs)  # Добавление пар в список
-
-    result_step.general_options += ', layout: { hierarchical: { direction: "LR", levelSeparation: 100, nodeSpacing: 150} }'
-
-
-    print(edges)
-    print(neighbor_ver)
-    flag = True
-    for edge in edges.keys():
-        # result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", "forceDirection": "none" }, width: 1'
-        if edge in neighbor_ver:
-            result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "dynamic", roundness: 0 }, width: 1'    
-        elif flag:
-            result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCW", roundness: 0.5 }, width: 1'
-            flag = False
-        else:
-            result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", roundness: 0.5 }, width: 1'
-            flag = True
-    
-    alg_result.append(result_step)
-    steps.append(alg_input)
+        result_step = Step()
+        result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400"">АЛГОРИТМ ПРЕРВАН ИЗ-ЗА НАЛИЧИЯ КОНТУРА В ГРАФЕ!</p>' # текст шага
+        alg_result.append(result_step)
 
     return [ alg_input, steps, alg_result ]  
