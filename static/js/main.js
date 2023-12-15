@@ -215,12 +215,12 @@ function show_matrix(blockDiag = false, bin = false)
             else
                 input.type = 'checkbox';
             input.name = 'matrixCell' + i + '_' + j;
-            input.classList.add('dark:bg-gray-800') 
+            input.classList.add('dark:bg-gray-800')
             if (blockDiag && i == j) { // блокировка диагонали
                 input.disabled = true;
                 input.value = 0;
                 input.className = "blocked"
-                input.classList.add('bg-gray-500') 
+                input.classList.add('bg-gray-500')
             } 
             cell.appendChild(input);
             row.appendChild(cell);

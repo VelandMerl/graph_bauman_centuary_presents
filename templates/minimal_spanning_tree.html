@@ -16,7 +16,9 @@
                 var input = cell.querySelector('input');
                 if (input) {
                     input.disabled = true;
-                    input.classList.add('bg-gray-500')
+                    input.classList.add('bg-gray-500') 
+                    input.classList.remove('dark:bg-gray-800')
+                    input.classList.add('dark:bg-gray-500') 
                 }
             }
         }
@@ -32,7 +34,7 @@ function checkMatrixAndDisableDiagonal() {
 }
 
 // Запускаем функцию через определенные интервалы (например, каждые 5 секунд)
-setInterval(checkMatrixAndDisableDiagonal, 10); // Измените интервал на необходимый
+setInterval(checkMatrixAndDisableDiagonal, 100); // Измените интервал на необходимый
 </script>
 
 <div class="max-w-screen-xl mx-auto">
