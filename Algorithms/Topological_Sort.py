@@ -300,6 +300,7 @@ def demukron(matrix):
         print('Алгоритм успешно завершен')  
         print(f'Вершины по уровням: {vertex_level}')
         result_step = copy.deepcopy(alg_input)
+        result_step.matrix = []
         result_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Разделение вершин по уровням - {vertex_level})</p>'
         result_step.text += '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф, разбитый на уровни</p>' # текст шага
         for ver, level in vertex_level.items(): # установка уровней для вершин

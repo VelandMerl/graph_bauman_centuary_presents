@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, jsonify
 import Algorithms.Strong_Connectivity as sc # импорт модуля Андрея
 import Algorithms.Topological_Sort as ts # импорт модуля Кирилла
 import Algorithms.Minimal_spanning_tree as st # импорт модуля Коли
+import ast
 
 from flask_sqlalchemy import SQLAlchemy ## имплементация бд
 
@@ -66,13 +67,17 @@ def set_data_to_session():
 @app.route('/set_dbdata', methods=['POST'])
 def set_dbdata():
     data = request.get_json() # получаем данные
-    info = data.get('dbData')
-    print(info)
-    matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
+    alg_code = data.get('alg_code') # получаем переданную строку
+    # запрос для получения матрицы
+    algos = Algorithm.query.filter_by(key = alg_code).first()
+    matrix = Example.query.filter_by(alg_id = algos.id).first().ex # получение матрицы
+    print(matrix)
+    matrix = ast.literal_eval(matrix)
+    print(matrix)
     session['matrix'] = matrix # сохранение матрицы в словаре "Session"
     print(session['matrix'])
 
-    return jsonify({'dbData': info})
+    return jsonify({'dbData': alg_code})
 
 # session['db_alg'] = Algorithm.query.filter_by(key = alg_code).first().dsc # сохранение экземпляра сущности Алгоритм в словаре "Session"
 # session['db_class'] = Problem_class.query.filter_by(id = Algorithm.query.filter_by(key = alg_code).first().pr_cl_id).first().dsc # сохранение экземпляра сущности Алгоритм в словаре "Session"

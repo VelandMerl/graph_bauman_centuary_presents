@@ -5,6 +5,36 @@
 
 {% block content %}
 
+<script>
+    function disableDiagonalInputs() {
+    var matrixTable = document.getElementById('matrix-table');
+    var rows = matrixTable.rows;
+    for (var i = 0; i < rows.length; i++) {
+        for (var j = 0; j < rows[i].cells.length; j++) {
+            var cell = rows[i].cells[j];
+            if (i > j) {
+                var input = cell.querySelector('input');
+                if (input) {
+                    input.disabled = true;
+                    input.classList.add('bg-gray-500')
+                }
+            }
+        }
+    }
+}
+
+// Функция, которая будет запускаться через определенные интервалы времени
+function checkMatrixAndDisableDiagonal() {
+    var matrixTable = document.getElementById('matrix-table');
+    if (matrixTable) {
+        disableDiagonalInputs(); // Проверяем и отключаем элементы
+    }
+}
+
+// Запускаем функцию через определенные интервалы (например, каждые 5 секунд)
+setInterval(checkMatrixAndDisableDiagonal, 10000); // Измените интервал на необходимый
+</script>
+
 <div class="max-w-screen-xl mx-auto">
     <div class="flex flex-col items-center">
         <div class="flex items-center mb-5">

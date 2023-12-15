@@ -13,15 +13,17 @@ var route = {
 
 function setDbdata(id)
 {
-    dbData = { "status": true }
-
+    dataToSend = {
+        alg_code: id
+    };
+    
     // отправляем информацию на сервер
     fetch('/set_dbdata', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json' // заголовок для корректного распознавания даннных на сервере
         },
-        body: JSON.stringify(dbData) // отправляем данные
+        body: JSON.stringify(dataToSend) // отправляем данные
     })
     .then(response => {
         if (!response.ok) {
@@ -68,7 +70,7 @@ function changeTemplate(id, id_desc, text)
     // Перебрать полученные элементы и скрыть их
     if (desc.length > 0) {
         // Перебрать полученные элементы и добавить класс 'hidden', чтобы скрыть их
-        desc.forEach(function(element) {
+        desc.forEach(function(element) {+
             element.classList.add('hidden'); // Добавить класс 'hidden' для скрытия элементов <p>
         });
     } else {
