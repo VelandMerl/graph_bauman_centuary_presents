@@ -368,7 +368,7 @@ def algorithm_Kosaraju(matrix):
     new_step = Step(True, True)
     visited.sort()
     new_step.step_label = f"Инверсия рёбер матрицы"
-    new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Инвертируем рёбра матрицы, инвертировав матрицу смежности</p>'
+    new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Инвертируем рёбра матрицы, транспонировав матрицу смежности</p>'
     new_step.nodes = all_vertex
     new_step.edges = inverted_edges
     for i in all_vertex:
@@ -388,6 +388,7 @@ def algorithm_Kosaraju(matrix):
         vertex_mark_list.append((i, marks[i]))
     
     vertex_mark_list.sort(key = lambda x: (x[1], x[0]), reverse = True)
+    vertex_mark = list(vertex_mark_list)
 
     hue_step = 0.1 # шаг hue меняет цвет
 
@@ -432,7 +433,7 @@ def algorithm_Kosaraju(matrix):
             graph_class.append(curr_vertex)
             visited.append(curr_vertex)
             for i in range(size_of_matrix):
-                if invert_matrix[curr_vertex][i] > 0 and not (i in visited):
+                if invert_matrix[curr_vertex][i] > 0 and not (i in visited) and (vertex_mark[curr_vertex][1] - vertex_mark[i][1] == 1):
                     queue.append(i)
                     added_to_class.append(i)
 
