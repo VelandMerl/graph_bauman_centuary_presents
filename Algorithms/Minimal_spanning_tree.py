@@ -20,7 +20,7 @@ def convert_prim(input):
                 if input[i][j] > 0:
                     result.append((input[i][j], i, j))
                 else:
-                    result.append((999999999999, i, j))
+                    result.append((9999, i, j))
     return result
 
 
@@ -191,24 +191,25 @@ def prim(input_matrix):
             gr_node = edge[2]         
         nodes.add(edge[1])             
         nodes.add(edge[2])
-        dictionary[(edge[1],edge[2])] = edge[0]
-        U1 = list(nodes)
+        if edge[0] != 9999:
+            dictionary[(edge[1],edge[2])] = edge[0]
+            U1 = list(nodes)
 
-        A = Step(True)            
-        A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим вершину {gr_node}, соединенную минимальным из оставшихся ребром [{edge[1]},{edge[2]}], имеющим вес {edge[0]}</p>'
-        A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соединенные вершины: {vertex_list_to_str(U1)}</p>'
-        A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины до сих пор не включенные в остов: {vertex_list_to_str(list(set(all_vertex) - set(U1)))}</p>'
-        A.nodes = list(U1)
-        A.step_label = 'Объединение компонент связности ребрами минимального размера.' 
-        for i in U1:
-            A.node_options[i] = f'label: "x{i}"'
-            A.node_options[i] += f', shape: "circle"'
-            if i == gr_node :
-                A.node_options[i] += f', "color": "#ADFF2F"'
-            else:
-                A.node_options[i] += f', "color": "#FFFFFF"' 
-        A.edges = dict(dictionary) 
-        steps.append(A)
+            A = Step(True)            
+            A.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Добавим вершину {gr_node}, соединенную минимальным из оставшихся ребром [{edge[1]},{edge[2]}], имеющим вес {edge[0]}</p>'
+            A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Соединенные вершины: {vertex_list_to_str(U1)}</p>'
+            A.text += f'<p class="mb-2 text-gray-500 dark:text-gray-400">Вершины до сих пор не включенные в остов: {vertex_list_to_str(list(set(all_vertex) - set(U1)))}</p>'
+            A.nodes = list(U1)
+            A.step_label = 'Объединение компонент связности ребрами минимального размера.' 
+            for i in U1:
+                A.node_options[i] = f'label: "x{i}"'
+                A.node_options[i] += f', shape: "circle"'
+                if i == gr_node :
+                    A.node_options[i] += f', "color": "#ADFF2F"'
+                else:
+                    A.node_options[i] += f', "color": "#FFFFFF"' 
+            A.edges = dict(dictionary) 
+            steps.append(A)
 
     alg_result = []
     result_step = Step(True)
