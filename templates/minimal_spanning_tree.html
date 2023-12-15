@@ -46,11 +46,11 @@
         </div>
     <div class="flex flex-col justify-center items-center">
         <div id = 'kr_desc' class="algorithmDesc flex flex-col justify-center items-center">
-            <p>{{ kr_desc.dsc|safe }}</p>
+            {{ kr_desc.dsc|safe }}
             <a id="changeMatrixSizeLink" onclick="setDbdata('kr')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
         </div>
         <div id = 'pr_desc' class="algorithmDesc flex flex-col justify-center items-center hidden">
-            <p>{{ pr_desc.dsc|safe }}</p>
+            {{ pr_desc.dsc|safe }}
             <a id="changeMatrixSizeLink" onclick="setDbdata('pr')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
         </div>
     <div>

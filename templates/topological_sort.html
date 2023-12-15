@@ -47,11 +47,11 @@
         </div>
     <div class="flex flex-col justify-center items-center">
         <div id = 'dm_desc' class="algorithmDesc flex flex-col justify-center items-center">
-            <p>{{ dm_desc.dsc|safe }}</p>
+            {{ dm_desc.dsc|safe }}
             <a id="changeMatrixSizeLink" onclick="setDbdata('dm')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
         </div>
         <div id = 'dfs_desc' class="algorithmDesc flex flex-col justify-center items-center hidden">
-            <p>{{ dfs_desc.dsc|safe }}</p>
+            {{ dfs_desc.dsc|safe }}
             <a id="changeMatrixSizeLink" onclick="setDbdata('dfs')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
         </div>
     <div>
