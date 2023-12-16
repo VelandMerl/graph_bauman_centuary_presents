@@ -236,9 +236,10 @@ function show_matrix(blockDiag = false, bin = false)
     
         if (target.tagName === 'INPUT') {
             var inputValue = target.value;
-            if (!/^\d+$/.test(inputValue)) { // Разрешаем только цифры
+            // Разрешаем только цифры и числа до 999
+            if (!/^\d{1,3}$/.test(inputValue)) {
                 // Очищаем поле ввода от некорректных символов
-                target.value = inputValue.replace(/\D/g, '');
+                target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
             }
         }
     });
