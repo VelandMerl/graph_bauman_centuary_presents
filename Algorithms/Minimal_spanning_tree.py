@@ -52,6 +52,9 @@ def kraskal(input_matrix):
         next_line += (list(input_matrix[i]))
         alg_input.matrix.append(list(next_line))
     for i in range(1, size_of_matrix+1):
+        for j in range(i, size_of_matrix+1):
+            alg_input.matrix[j][i] = alg_input.matrix[i][j]
+    for i in range(1, size_of_matrix+1):
         alg_input.matrix[i][i] = -1
     
     alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Введенный граф</p>'
@@ -163,6 +166,9 @@ def prim(input_matrix):
         next_line.append(f'x{i}')
         next_line += (list(input_matrix[i]))
         alg_input.matrix.append(list(next_line))
+    for i in range(1, N+1):
+        for j in range(i, N+1):
+            alg_input.matrix[j][i] = alg_input.matrix[i][j]
     for i in range(1, N+1):
         alg_input.matrix[i][i] = -1
 
