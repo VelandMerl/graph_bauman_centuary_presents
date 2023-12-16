@@ -316,8 +316,8 @@ def algorithm_Kosaraju(matrix):
                     
                     # queue.append(i)
                     not_marked_neighbor.append(i)
-                
-                visited.append(curr_vertex)
+                if not curr_vertex in visited:
+                    visited.append(curr_vertex)
             set_mark_text += '</p>'
             # формирование шага для обхода в глубину
             new_step = Step(True, True)
@@ -437,7 +437,8 @@ def algorithm_Kosaraju(matrix):
             curr_vertex = queue.pop()
             if curr_vertex in visited: continue
             graph_class.append(curr_vertex)
-            visited.append(curr_vertex)
+            if not curr_vertex in visited:
+                visited.append(curr_vertex)
             for i in range(size_of_matrix):
                 if invert_matrix[curr_vertex][i] > 0 and not (i in visited):
                     queue.append(i)
