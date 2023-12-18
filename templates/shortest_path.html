@@ -10,7 +10,7 @@
         <div class="flex items-center mb-5">
             <div class="relative ml-4">
                 <button data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
-                <span id="ml" class="algorithmTitle">Алгоритм Мальгранжа</span>
+                <span id="ds" class="algorithmTitle">Алгоритм Дейкстры</span>
                 <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
                 </svg>
@@ -18,10 +18,13 @@
                 <div id="dropdownHover" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                     <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
                       <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ml', 'ml_desc', 'Алгоритм Мальгранжа')">Алгоритм Мальгранжа</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ds', 'ds_desc', 'Алгоритм Дейкстры')">Алгоритм Дейкстры</a>
                       </li>
                       <li>
-                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('ks', 'ks_desc', 'Алгоритм Косарайю')">Алгоритм Косарайю</a>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('bf', 'bf_desc', 'Алгоритм Беллмана - Форда')">Алгоритм Беллмана - Форда</a>
+                      </li>
+                      <li>
+                        <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white" onclick="changeTemplate('fl', 'fl_desc', 'Алгоритм Флойда - Уоршелла')">Алгоритм Флойда - Уоршелла</a>
                       </li>
                     </ul>
                 </div>
@@ -30,7 +33,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>    
     <div class="flex flex-col justify-center items-center">
         <div id="matrix_size_div" class="flex flex-col justify-center items-center mb-5 w-3/5">
             <div class="w-full mb-5">
@@ -45,14 +48,20 @@
         <div id="matrix_input">
         </div>
     <div class="flex flex-col justify-center items-center">
-        <div id = 'ml_desc' class="algorithmDesc flex flex-col justify-center items-center m-4">
-            {{ ml_desc.dsc|safe }}
-            <a id="changeMatrixSizeLink" onclick="setDbdata('ml')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
+        <div id = 'ds_desc' class="algorithmDesc flex flex-col justify-center items-center m-4">
+            {{ ds_desc.dsc|safe }}
+            <a id="changeMatrixSizeLink" onclick="setDbdata('ds')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
         </div>
-        <div id = 'ks_desc' class="algorithmDesc flex flex-col justify-center items-center hidden m-4">
-            {{ ks_desc.dsc|safe }}
-            <a id="changeMatrixSizeLink" onclick="setDbdata('ks')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
+        <div id = 'bf_desc' class="algorithmDesc flex flex-col justify-center items-center hidden m-4">
+            {{ bf_desc.dsc|safe }}
+            <a id="changeMatrixSizeLink" onclick="setDbdata('bf')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
+        </div>
+        <div id = 'fl_desc' class="algorithmDesc flex flex-col justify-center items-center hidden m-4">
+            {{ fl_desc.dsc|safe }}
+            <a id="changeMatrixSizeLink" onclick="setDbdata('fl')" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline">Посмотреть пример</a>
         </div>
     <div>
 </div>
+
+
 {% endblock %}

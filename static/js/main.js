@@ -7,7 +7,10 @@ var route = {
     ml: '/strong_connectivity/malgrange',
     ks: '/strong_connectivity/kosaraju',
     pr: '/minimal_spanning_tree/prim',
-    kr: '/minimal_spanning_tree/kraskal'
+    kr: '/minimal_spanning_tree/kraskal',
+    ds: '/shortest_path/dijkstra',
+    bf: '/shortest_path/bellman–ford',
+    fl: '/shortest_path/floyd_warshall',
 };
 
 

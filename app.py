@@ -85,6 +85,45 @@ def set_dbdata():
 # print(f'Класс алгоритма: {alg_code}', f'БД: {session["db_class"]}', sep="\n") # тестовый вывод
 # print(f'Код алгоритма: {alg_code}', f'БД: {session["db_alg"]}', sep="\n") # тестовый вывод
 
+# алгоритмы Даны
+@app.route("/sorting_array")
+def sorting_array():
+    
+    return render_template("binary_tree/sorting_array.html", title = 'Сортировка массива')
+
+@app.route("/traversal")
+def traversal():
+    
+    return render_template("binary_tree/traversal.html", title = 'Обходы')
+
+# алгоритмы Маши
+@app.route("/shortest_path")
+def shortest_path():
+    return render_template("shortest_path.html", show_alg_btn = [], title = 'Кратчайший путь', ds_desc = Algorithm.query.filter_by(key = 'ds').first(), bf_desc = Algorithm.query.filter_by(key = 'bf').first(), fl_desc = Algorithm.query.filter_by(key = 'fl').first())
+
+@app.route('/shortest_path/dijkstra')
+def dijkstra():
+    # matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
+    alg_input, steps, alg_result = ts.algorithm_depth_first_search(session['matrix'])
+    return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Поиск в глубину', alg_title = "Поиск в глубину", alg_input = alg_input, steps = steps, alg_result = alg_result)
+
+@app.route('/shortest_path/bellman–ford')
+def bellman_ford():
+    matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
+
+    alg_input, steps, alg_result = ts.demukron(session['matrix'])
+    # alg_input, steps, alg_result = ts.demukron(matrix)
+    return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Демукрон', alg_title = "Алгоритм Демукрона", alg_input = alg_input, steps = steps, alg_result = alg_result)
+
+@app.route('/shortest_path/floyd_warshall')
+def floyd_warshall():
+    matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
+
+    alg_input, steps, alg_result = ts.demukron(session['matrix'])
+    # alg_input, steps, alg_result = ts.demukron(matrix)
+    return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Демукрон', alg_title = "Алгоритм Демукрона", alg_input = alg_input, steps = steps, alg_result = alg_result)
+
+
 
 # алгоритмы Андрей
 @app.route("/strong_connectivity")
