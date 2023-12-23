@@ -45,15 +45,6 @@ function setDbdata(id)
     });
 }
 
-    // .then(response => response.json())
-    // .then(data => {
-    //     var desc = document.getElementById('alg_desc');
-    //     desc.textContent = data.db_alg // обновление содержимого элемента с id 'alg_desc'
-    // })
-    // .catch(error => {
-    //     console.error('Произошла ошибка при получении данных:', error);
-    // });
-
 function changeTemplate(id, id_desc, text)
 {
     var title = document.querySelector('.algorithmTitle'); // получени элемента по имени класса
@@ -91,6 +82,14 @@ function get_matrix()
         input.disabled = true; // отключить возможность ввода
     });
 
+    // отключение ввода пути
+    var inputs = document.querySelectorAll('#path input[type="text"]');
+    if (inputs) {
+        inputs.forEach(function(input) {
+            input.disabled = true; // отключить возможность ввода
+        });
+    }
+
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
 
     var matrixData = [] // пустая матрица
@@ -110,11 +109,32 @@ function get_matrix()
         matrixData.push(row) // добавляем одномерный массив в матрицу
     }
 
-    var dataToSend = {
-        size: matrixSize,
-        matrix: matrixData
-    };
-
+    // получение пути
+    var pathFlag = false
+    var start = document.getElementById('from')
+    var finish = document.getElementById('to')
+    if (start && finish) 
+        start = Number(start.value)
+        finish = Number(finish.value)
+        pathFlag = true
+        
+    if (pathFlag) {
+          var dataToSend = {
+            size: matrixSize,
+            matrix: matrixData,
+            pathFlag: pathFlag,
+            start_ver: start,
+            finish_ver: finish
+        };
+    }
+    else {
+        var dataToSend = {
+            size: matrixSize,
+            matrix: matrixData,
+            pathFlag: pathFlag
+        };
+    }
+        
     // отправляем данные на сервер
     fetch('/set_data_to_session', {
         method: 'POST',
@@ -132,7 +152,7 @@ function get_matrix()
 }
 
 // изменение матрицы
-function edit_matrix(clear = true) 
+function edit_matrix(clear = true)
 {
     var inputs = document.querySelectorAll('#matrix-table input[type="text"], #matrix-table input[type="checkbox"]');
     if (clear) {
@@ -145,6 +165,15 @@ function edit_matrix(clear = true)
             if (!input.classList.contains('blocked'))
                 input.disabled = false; // включить возможность ввода
         });
+            // включение вомзожности ввода пути
+            var inputs = document.querySelectorAll('#path input[type="text"]');
+            if (inputs) {
+                inputs.forEach(function(input) {
+                    if (!input.classList.contains('blocked'))
+                        input.disabled = false; // отключить возможность ввода
+                });
+            }
+
         document.getElementById('send-btnContainer').classList.remove('hidden') // возвращаем кнопки ввода матрицы
         document.getElementById('change-btnContainer').classList.add('hidden') // прячем кнопки получения результата
     }
@@ -160,7 +189,8 @@ function back_to_size()
 // формирование таблицы
 // diag = false/true - разблокирована/диагональ заблокирована
 // bin = false/true - обычная с весами/бинарная
-function show_matrix(blockDiag = false, bin = false)
+// direction = false/true - нет/есть поле для ввода нач. и конечной вершин
+function show_matrix(blockDiag = false, bin = false, direction = false)
 {
     sizeButton = document.getElementById('changeMatrixSizeLink')
     sizeButton.classList.remove('hidden')
@@ -233,6 +263,49 @@ function show_matrix(blockDiag = false, bin = false)
     table.appendChild(tbody);
     matrixContainer.appendChild(table);
 
+    if (direction) {
+        // добавление пути
+        // создаем блок для элементов "Из" и "В"
+        var ioContainer = document.createElement('div');
+        ioContainer.className = 'flex items-center justify-between p-4';
+        ioContainer.id = 'path'
+
+        // создаем элементы label для подписей "Из" и "В"
+        var fromLabel = document.createElement('label');
+        fromLabel.textContent = 'Из:';
+        fromLabel.className = 'p-1 dark:text-gray-400';
+    
+        var toLabel = document.createElement('label');
+        toLabel.textContent = 'В:';
+        toLabel.className = 'p-1 dark:text-gray-400';
+
+        // добавляем элементы label в блок "Из/В"
+        ioContainer.appendChild(fromLabel);
+
+        // Создаем элементы input для "Из" и "В"
+        var fromInput = document.createElement('input');
+        fromInput.type = 'text';
+        fromInput.classList.add('border', 'rounded', 'dark:bg-gray-800');
+        fromInput.id = 'from'
+
+        var toInput = document.createElement('input');
+        toInput.type = 'text';
+        toInput.classList.add('border', 'rounded', 'dark:bg-gray-800');
+        toInput.id = 'to'
+
+        // Добавляем элементы input в блок "Из/В"
+        ioContainer.appendChild(fromInput);
+
+        // Добавляем подпись "В" после input "Из"
+        ioContainer.appendChild(toLabel);
+
+        // Добавляем элемент input "В" после подписи "В"
+        ioContainer.appendChild(toInput);
+
+        // Добавляем блок "Из/В" под таблицей с матрицей
+        matrixContainer.appendChild(ioContainer);
+    }
+    
     // разрешения на ввод только чисел
     matrixContainer.addEventListener('input', function(event) {
         var target = event.target;
@@ -245,6 +318,18 @@ function show_matrix(blockDiag = false, bin = false)
                 target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
             }
         }
+
+        // Проверяем, что изменения происходят в элементах с id='from' или id='to'
+        if (target.id === 'from' || target.id === 'to') {
+            var inputValue = parseInt(target.value, 10); // Преобразуем введенное значение в число
+
+            // Проверяем, чтобы введенное значение не превышало размера матрицы
+            if (isNaN(inputValue) || inputValue > size - 1) {
+                // Если введено число больше размера матрицы, удаляем его
+                target.value = ''
+            }
+        }
+
     });
 
     var buttonContainer = document.createElement('div');

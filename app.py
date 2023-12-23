@@ -56,10 +56,18 @@ def set_data_to_session():
     data = request.get_json() # получаем данные
     matrix = data.get('matrix')
     size = data.get('size')
+    pathFlag = data.get('pathFlag')
+
     session['matrix'] = matrix # сохранение матрицы в словаре "Session"
     session['size'] = size # сохранение матрицы в словаре "Session"
 
     print(f'Размер: {size}', f'Матрица: {matrix}', sep="\n") # тестовый вывод
+
+    if pathFlag:
+        session['start_ver'] = data.get('start_ver') # сохранение нач. вершины в словаре "Session"
+        session['finish_ver'] = data.get('finish_ver') # сохранение кон. вершины в словаре "Session"
+        print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', sep="\n") # тестовый вывод
+
 
     return 'Данные успешно получены на сервере' # требуется возврат текстового значения
 
@@ -103,6 +111,12 @@ def shortest_path():
 
 @app.route('/shortest_path/dijkstra')
 def dijkstra():
+
+    print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', sep="\n") # тестовый вывод
+    # session["start_ver"]
+    # session["finish_ver"]
+
+
     # matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
     alg_input, steps, alg_result = ts.algorithm_depth_first_search(session['matrix'])
     return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Поиск в глубину', alg_title = "Поиск в глубину", alg_input = alg_input, steps = steps, alg_result = alg_result)
