@@ -83,14 +83,15 @@ masha_algorithm3 = Algorithm(alg = '<span>Алгоритм Флойда</span>',
 db.session.add(masha_algorithm3)
 db.session.commit()
 
-masha_example = Example(ex = "[ [0, 7, 2, 0, 13, 0], [0, 0, 0, 0, 4, 0], [0, 2, 0, 8, 0, 11], [0, 0, 0, 0, 0, 5], [0, 0, 0, 3, 0, 1], [2, 0, 0, 0, 0, 0] ]", alg_id = 7)
+masha_example = Example(ex = "[ [0, 7, 2, 0, 13, 0], [0, 0, 0, 0, 4, 0], [0, 2, 0, 8, 0, 11], [0, 0, 0, 0, 0, 5], [0, 0, 0, 3, 0, 1], [2, 0, 0, 0, 0, 0] ]", dsc = "[0, 5, True]", alg_id = 7)
 db.session.add(masha_example)
 db.session.commit()
 
-masha_example2 = Example(ex = "[ [0, 7, 2, 0, 13, 0], [0, 0, 0, 0, 4, 0], [0, 2, 0, 8, 0, 11], [0, 0, 0, 0, 0, 5], [0, 0, 0, 3, 0, 1], [2, 0, 0, 0, 0, 0] ]", alg_id = 8)
+masha_example2 = Example(ex = "[ [0, 7, 2, 0, 13, 0], [0, 0, 0, 0, 4, 0], [0, 2, 0, 8, 0, 11], [0, 0, 0, 0, 0, 5], [0, 0, 0, 3, 0, 1], [2, 0, 0, 0, 0, 0] ]", dsc = "[0, 5, True]", alg_id = 8)
 db.session.add(masha_example2)
 db.session.commit()
 
-masha_example3 = Example(ex = "[ [0, 7, 2, 0, 13, 0], [0, 0, 0, 0, 4, 0], [0, 2, 0, 8, 0, 11], [0, 0, 0, 0, 0, 5], [0, 0, 0, 3, 0, 1], [2, 0, 0, 0, 0, 0] ]", alg_id = 9)
+masha_example3 = Example(ex = "[ [0, 7, 2, 0, 13, 0], [0, 0, 0, 0, 4, 0], [0, 2, 0, 8, 0, 11], [0, 0, 0, 0, 0, 5], [0, 0, 0, 3, 0, 1], [2, 0, 0, 0, 0, 0] ]", dsc = "[0, 5, True]", alg_id = 9)
 db.session.add(masha_example3)
 db.session.commit()
+

@@ -90,6 +90,11 @@ function get_matrix()
         });
     }
 
+    // отключение toggle
+    if (document.getElementById('graphToggle')) {
+        document.getElementById('graphToggle').disabled = true
+    }
+
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
 
     var matrixData = [] // пустая матрица
@@ -102,7 +107,10 @@ function get_matrix()
             var input = document.getElementsByName('matrixCell' + i + '_' + j)[0];
             var type = input.type
             if (type == 'text')
-                row.push(Number(input.value)) // добавляем значения в одномерный массив
+                if (!Number(input.value))
+                    row.push(0)
+                else
+                    row.push(Number(input.value)) // добавляем значения в одномерный массив
             else if (type == 'checkbox') 
                 row.push(Number(input.checked))              
         }
@@ -113,18 +121,21 @@ function get_matrix()
     var pathFlag = false
     var start = document.getElementById('from')
     var finish = document.getElementById('to')
-    if (start && finish) 
+    if (start && finish) {
         start = Number(start.value)
         finish = Number(finish.value)
+        typeGraph = document.getElementById('graphToggle').checked
         pathFlag = true
-        
+    }
+    
     if (pathFlag) {
           var dataToSend = {
             size: matrixSize,
             matrix: matrixData,
             pathFlag: pathFlag,
             start_ver: start,
-            finish_ver: finish
+            finish_ver: finish,
+            orgraph: typeGraph
         };
     }
     else {
@@ -173,6 +184,10 @@ function edit_matrix(clear = true)
                         input.disabled = false; // отключить возможность ввода
                 });
             }
+            // включение вомзожности изменения типа графа
+            if (document.getElementById('graphToggle')) {
+                document.getElementById('graphToggle').disabled = false
+            }
 
         document.getElementById('send-btnContainer').classList.remove('hidden') // возвращаем кнопки ввода матрицы
         document.getElementById('change-btnContainer').classList.add('hidden') // прячем кнопки получения результата
@@ -184,6 +199,12 @@ function back_to_size()
     document.getElementById('changeMatrixSizeLink').classList.add('hidden')
     document.getElementById('matrix_input').classList.add('hidden')
     document.getElementById('matrix_size_div').classList.remove('hidden')
+    try {
+        document.getElementById('changeGraphType').classList.add('hidden')
+    } catch (err) {
+        console.log('Элемент toggle остутствует')
+    }
+  
 }
 
 // формирование таблицы
@@ -197,6 +218,17 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
     sizeButton.addEventListener('click', function() {
         back_to_size(); // добавление функции get_matrix()
     });
+
+    try {
+        divToggle = document.getElementById('changeGraphType')
+        toggle = document.getElementById('graphToggle')
+        toggle.disabled = false
+        toggle.checked = true
+        divToggle.classList.remove('hidden')
+    } catch (err) {
+        console.log('Элемент toggle остутствует')
+    }
+  
 
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
     document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
@@ -243,6 +275,7 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
         for (var j = 1; j <= size; j++) {
             var cell = document.createElement('td');
             var input = document.createElement('input');
+            input.classList.add('dark:text-gray-400')
             if (!bin)
                 input.type = 'text';
             else
@@ -254,6 +287,7 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
                 input.value = 0;
                 input.className = "blocked"
                 input.classList.add('bg-gray-500')
+                input.classList.add('dark:text-gray-400')
             } 
             cell.appendChild(input);
             row.appendChild(cell);
@@ -285,12 +319,12 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
         // Создаем элементы input для "Из" и "В"
         var fromInput = document.createElement('input');
         fromInput.type = 'text';
-        fromInput.classList.add('border', 'rounded', 'dark:bg-gray-800');
+        fromInput.classList.add('border', 'rounded', 'dark:bg-gray-800', 'dark:text-gray-400');
         fromInput.id = 'from'
 
         var toInput = document.createElement('input');
         toInput.type = 'text';
-        toInput.classList.add('border', 'rounded', 'dark:bg-gray-800');
+        toInput.classList.add('border', 'rounded', 'dark:bg-gray-800', 'dark:text-gray-400');
         toInput.id = 'to'
 
         // Добавляем элементы input в блок "Из/В"
@@ -305,20 +339,58 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
         // Добавляем блок "Из/В" под таблицей с матрицей
         matrixContainer.appendChild(ioContainer);
     }
-    
+
     // разрешения на ввод только чисел
     matrixContainer.addEventListener('input', function(event) {
         var target = event.target;
     
+        const currentURL = window.location.href;
+        console.log(currentURL);
+
+        if (currentURL === 'http://127.0.0.1:5000/shortest_path') {
+            if (target.tagName === 'INPUT') {
+        let inputValue = target.value;
+
+        // Разрешаем только числа от -999 до 999
         if (target.tagName === 'INPUT') {
-            var inputValue = target.value;
-            // Разрешаем только цифры и числа до 999
-            if (!/^\d{1,3}$/.test(inputValue)) {
-                // Очищаем поле ввода от некорректных символов
-                target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
+            let inputValue = target.value;
+    
+            // Разрешаем только числа от -999 до 999
+            if (/^-?\d{0,3}$/.test(inputValue)) {
+                // Если число находится в допустимом диапазоне, оставляем его без изменений
+                return;
+            }
+    
+            // Очищаем поле ввода от некорректных символов
+            inputValue = inputValue.replace(/\D/g, '');
+    
+            // Ограничиваем ввод до 3 символов
+            if (inputValue.length > 3) {
+                inputValue = inputValue.slice(0, 3);
+            }
+    
+            // Если ввод содержит знак "-" перед числом, ограничиваем до -999
+            if (inputValue.startsWith('-')) {
+                inputValue = '-' + inputValue.slice(1, 4);
+            } else {
+                // Ограничиваем ввод до 999
+                inputValue = inputValue.slice(0, 3);
+            }
+    
+            // Обновляем значение в поле ввода
+            target.value = inputValue;
+        }
+    }
+        } else {
+            if (target.tagName === 'INPUT') {
+                var inputValue = target.value;
+                // Разрешаем только цифры и числа до 999
+                if (!/^\d{1,3}$/.test(inputValue)) {
+                    // Очищаем поле ввода от некорректных символов
+                    target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
+                }
             }
         }
-
         // Проверяем, что изменения происходят в элементах с id='from' или id='to'
         if (target.id === 'from' || target.id === 'to') {
             var inputValue = parseInt(target.value, 10); // Преобразуем введенное значение в число

@@ -7,7 +7,7 @@
 
 <div class="max-w-screen-xl mx-auto">
     <div class="flex flex-col items-center">
-        <div class="flex items-center mb-5">
+        <div class="flex items-center">
             <div class="relative ml-4">
                 <button data-dropdown-toggle="dropdownHover" data-dropdown-trigger="hover" class="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                 <span id="ds" class="algorithmTitle">Алгоритм Дейкстры</span>
@@ -28,8 +28,15 @@
                       </li>
                     </ul>
                 </div>
-                <div class="w-full flex justify-center items-center pt-6">
+                <div class="w-full flex-col justify-center items-center p-6">
                     <a id="changeMatrixSizeLink" href="#" class="block text-center font-medium text-gray-600 dark:text-gray-400 hover:underline hidden">Изменить размер матрицы</a>
+                </div>
+                <div id="changeGraphType" class="w-full flex justify-center items-center hidden">
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" value="" class="sr-only peer" checked id="graphToggle">
+                        <div class="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
+                        <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Орграф</span>
+                    </label>
                 </div>
             </div>
         </div>
@@ -63,5 +70,60 @@
     <div>
 </div>
 
+<script>
+    function disableDiagonalInputs() {
+        var matrixTable = document.getElementById('matrix-table');
+        var rows = matrixTable.rows;
+        for (var i = 0; i < rows.length; i++) {
+            for (var j = 0; j < rows[i].cells.length; j++) {
+                var cell = rows[i].cells[j];
+                if (i > j) {
+                    var input = cell.querySelector('input');
+                    if (input) {
+                        input.value = ''
+                        input.disabled = true
+                        input.classList.add('bg-gray-500') 
+                        input.classList.remove('dark:bg-gray-800')
+                        input.classList.add('dark:bg-gray-500') 
+                    }
+                }
+            }
+        }
+    }
+
+    function enableDiagonalInputs() {
+        var matrixTable = document.getElementById('matrix-table');
+        var rows = matrixTable.rows;
+        for (var i = 0; i < rows.length; i++) {
+            for (var j = 0; j < rows[i].cells.length; j++) {
+                var cell = rows[i].cells[j];
+                if (i > j) {
+                    var input = cell.querySelector('input');
+                    if (input) {
+                        input.disabled = false
+                        input.className = 'dark:bg-gray-800'
+                        input.classList.add('dark:text-gray-400')
+                    }
+                }
+            }
+        }
+    }
+
+
+    function checkMatrixAndDisableDiagonal() {
+        var matrixTable = document.getElementById('matrix-table');
+        if (matrixTable) {
+            disableDiagonalInputs();
+        }
+    }
+
+    var toggle = document.getElementById('graphToggle');
+    toggle.addEventListener('change', function() {
+        if (this.checked)
+            enableDiagonalInputs()
+        else
+            checkMatrixAndDisableDiagonal()
+    });
+</script>
 
 {% endblock %}

@@ -66,7 +66,8 @@ def set_data_to_session():
     if pathFlag:
         session['start_ver'] = data.get('start_ver') # сохранение нач. вершины в словаре "Session"
         session['finish_ver'] = data.get('finish_ver') # сохранение кон. вершины в словаре "Session"
-        print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', sep="\n") # тестовый вывод
+        session['orgraph'] = data.get('orgraph') # сохранение вида графа
+        print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', f'Тип графа: {session["orgraph"]}', sep="\n") # тестовый вывод
 
 
     return 'Данные успешно получены на сервере' # требуется возврат текстового значения
@@ -85,13 +86,18 @@ def set_dbdata():
     session['matrix'] = matrix # сохранение матрицы в словаре "Session"
     print(session['matrix'])
 
-    return jsonify({'dbData': alg_code})
+    try:
+        # получение направления
+        dsc = Example.query.filter_by(alg_id = algos.id).first().dsc 
+        dsc = ast.literal_eval(dsc)
+        session['start_ver'] = dsc[0] # сохранение нач. вершины в словаре "Session"
+        session['finish_ver'] = dsc[1] # сохранение кон. вершины в словаре "Session"
+        session['orgraph'] = dsc[2] # сохранение вида графа
+        print(session['start_ver'],  session['finish_ver'], session['orgraph'])
+    except ValueError:
+        print('Этих данных нет в БД')
 
-# session['db_alg'] = Algorithm.query.filter_by(key = alg_code).first().dsc # сохранение экземпляра сущности Алгоритм в словаре "Session"
-# session['db_class'] = Problem_class.query.filter_by(id = Algorithm.query.filter_by(key = alg_code).first().pr_cl_id).first().dsc # сохранение экземпляра сущности Алгоритм в словаре "Session"
-    
-# print(f'Класс алгоритма: {alg_code}', f'БД: {session["db_class"]}', sep="\n") # тестовый вывод
-# print(f'Код алгоритма: {alg_code}', f'БД: {session["db_alg"]}', sep="\n") # тестовый вывод
+    return jsonify({'dbData': alg_code})
 
 # алгоритмы Даны
 @app.route("/sorting_array")
