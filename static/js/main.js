@@ -347,14 +347,10 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
         const currentURL = window.location.href;
         console.log(currentURL);
 
-        if (currentURL === 'http://127.0.0.1:5000/shortest_path') {
+        if (currentURL.includes('/shortest_path')) {
             if (target.tagName === 'INPUT') {
-        let inputValue = target.value;
-
-        // Разрешаем только числа от -999 до 999
-        if (target.tagName === 'INPUT') {
             let inputValue = target.value;
-    
+  
             // Разрешаем только числа от -999 до 999
             if (/^-?\d{0,3}$/.test(inputValue)) {
                 // Если число находится в допустимом диапазоне, оставляем его без изменений
@@ -380,7 +376,6 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
             // Обновляем значение в поле ввода
             target.value = inputValue;
         }
-    }
         } else {
             if (target.tagName === 'INPUT') {
                 var inputValue = target.value;
