@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, session, jsonify
 import Algorithms.Strong_Connectivity as sc # импорт модуля Андрея
 import Algorithms.Topological_Sort as ts # импорт модуля Кирилла
 import Algorithms.Minimal_spanning_tree as st # импорт модуля Коли
+import Algorithms.Shortest_Path as sp # импорт модуля Маши
 import ast
 
 from flask_sqlalchemy import SQLAlchemy ## имплементация бд
@@ -110,6 +111,7 @@ def traversal():
     
     return render_template("binary_tree/traversal.html", title = 'Обходы')
 
+
 # алгоритмы Маши
 @app.route("/shortest_path")
 def shortest_path():
@@ -118,31 +120,20 @@ def shortest_path():
 @app.route('/shortest_path/dijkstra')
 def dijkstra():
 
-    print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', sep="\n") # тестовый вывод
-    # session["start_ver"]
-    # session["finish_ver"]
-
-
-    # matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
-    alg_input, steps, alg_result = ts.algorithm_depth_first_search(session['matrix'])
-    return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Поиск в глубину', alg_title = "Поиск в глубину", alg_input = alg_input, steps = steps, alg_result = alg_result)
+    alg_input, steps, alg_result = sp.algorithm_Dijkstra(session['matrix'], session["start_ver"], session["finish_ver"], session['orgraph'])
+    return render_template("main.html", show_alg_btn = ["ds", "bf", "fl"], title = 'Дейкстра', alg_title = "Алгоритм Дейкстры", alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 @app.route('/shortest_path/bellman–ford')
 def bellman_ford():
-    matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
 
-    alg_input, steps, alg_result = ts.demukron(session['matrix'])
-    # alg_input, steps, alg_result = ts.demukron(matrix)
-    return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Демукрон', alg_title = "Алгоритм Демукрона", alg_input = alg_input, steps = steps, alg_result = alg_result)
+    alg_input, steps, alg_result = sp.algorithm_Bellman_Ford(session['matrix'], session["start_ver"], session["finish_ver"], session['orgraph'])
+    return render_template("main.html", show_alg_btn = ["ds", "bf", "fl"], title = 'Беллман-Форд', alg_title = "Алгоритм Беллмана-Форда", alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 @app.route('/shortest_path/floyd_warshall')
 def floyd_warshall():
-    matrix = [ [0, 1, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 0, 0, 0], [0, 1, 0, 0, 1], [0, 0, 1, 0, 0] ]
 
-    alg_input, steps, alg_result = ts.demukron(session['matrix'])
-    # alg_input, steps, alg_result = ts.demukron(matrix)
-    return render_template("main.html", show_alg_btn = ["dm", "dfs"], title = 'Демукрон', alg_title = "Алгоритм Демукрона", alg_input = alg_input, steps = steps, alg_result = alg_result)
-
+    alg_input, steps, alg_result = sp.algorithm_Floyd_Warshall(session['matrix'], session["start_ver"], session["finish_ver"], session['orgraph']) 
+    return render_template("main.html", show_alg_btn = ["ds", "bf", "fl"], title = 'Флойд-Уоршелл', alg_title = "Алгоритм Флойда-Уоршелла", alg_input = alg_input, steps = steps, alg_result = alg_result)
 
 
 # алгоритмы Андрей
