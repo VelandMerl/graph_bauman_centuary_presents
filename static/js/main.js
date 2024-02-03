@@ -7,7 +7,10 @@ var route = {
     ml: '/strong_connectivity/malgrange',
     ks: '/strong_connectivity/kosaraju',
     pr: '/minimal_spanning_tree/prim',
-    kr: '/minimal_spanning_tree/kraskal'
+    kr: '/minimal_spanning_tree/kraskal',
+    ds: '/shortest_path/dijkstra',
+    bf: '/shortest_path/bellman–ford',
+    fl: '/shortest_path/floyd_warshall',
 };
 
 
@@ -41,15 +44,6 @@ function setDbdata(id)
         console.error('Произошла ошибка:', error);
     });
 }
-
-    // .then(response => response.json())
-    // .then(data => {
-    //     var desc = document.getElementById('alg_desc');
-    //     desc.textContent = data.db_alg // обновление содержимого элемента с id 'alg_desc'
-    // })
-    // .catch(error => {
-    //     console.error('Произошла ошибка при получении данных:', error);
-    // });
 
 function changeTemplate(id, id_desc, text)
 {
@@ -88,6 +82,19 @@ function get_matrix()
         input.disabled = true; // отключить возможность ввода
     });
 
+    // отключение ввода пути
+    var inputs = document.querySelectorAll('#path input[type="text"]');
+    if (inputs) {
+        inputs.forEach(function(input) {
+            input.disabled = true; // отключить возможность ввода
+        });
+    }
+
+    // отключение toggle
+    if (document.getElementById('graphToggle')) {
+        document.getElementById('graphToggle').disabled = true
+    }
+
     var matrixSize = document.getElementById('range_size_of_matrix').value // размер матрицы
 
     var matrixData = [] // пустая матрица
@@ -100,18 +107,45 @@ function get_matrix()
             var input = document.getElementsByName('matrixCell' + i + '_' + j)[0];
             var type = input.type
             if (type == 'text')
-                row.push(Number(input.value)) // добавляем значения в одномерный массив
+                if (!Number(input.value))
+                    row.push(0)
+                else
+                    row.push(Number(input.value)) // добавляем значения в одномерный массив
             else if (type == 'checkbox') 
                 row.push(Number(input.checked))              
         }
         matrixData.push(row) // добавляем одномерный массив в матрицу
     }
 
-    var dataToSend = {
-        size: matrixSize,
-        matrix: matrixData
-    };
-
+    // получение пути
+    var pathFlag = false
+    var start = document.getElementById('from')
+    var finish = document.getElementById('to')
+    if (start && finish) {
+        start = Number(start.value)
+        finish = Number(finish.value)
+        typeGraph = document.getElementById('graphToggle').checked
+        pathFlag = true
+    }
+    
+    if (pathFlag) {
+          var dataToSend = {
+            size: matrixSize,
+            matrix: matrixData,
+            pathFlag: pathFlag,
+            start_ver: start,
+            finish_ver: finish,
+            orgraph: typeGraph
+        };
+    }
+    else {
+        var dataToSend = {
+            size: matrixSize,
+            matrix: matrixData,
+            pathFlag: pathFlag
+        };
+    }
+        
     // отправляем данные на сервер
     fetch('/set_data_to_session', {
         method: 'POST',
@@ -129,7 +163,7 @@ function get_matrix()
 }
 
 // изменение матрицы
-function edit_matrix(clear = true) 
+function edit_matrix(clear = true)
 {
     var inputs = document.querySelectorAll('#matrix-table input[type="text"], #matrix-table input[type="checkbox"]');
     if (clear) {
@@ -142,6 +176,19 @@ function edit_matrix(clear = true)
             if (!input.classList.contains('blocked'))
                 input.disabled = false; // включить возможность ввода
         });
+            // включение вомзожности ввода пути
+            var inputs = document.querySelectorAll('#path input[type="text"]');
+            if (inputs) {
+                inputs.forEach(function(input) {
+                    if (!input.classList.contains('blocked'))
+                        input.disabled = false; // отключить возможность ввода
+                });
+            }
+            // включение вомзожности изменения типа графа
+            if (document.getElementById('graphToggle')) {
+                document.getElementById('graphToggle').disabled = false
+            }
+
         document.getElementById('send-btnContainer').classList.remove('hidden') // возвращаем кнопки ввода матрицы
         document.getElementById('change-btnContainer').classList.add('hidden') // прячем кнопки получения результата
     }
@@ -152,18 +199,36 @@ function back_to_size()
     document.getElementById('changeMatrixSizeLink').classList.add('hidden')
     document.getElementById('matrix_input').classList.add('hidden')
     document.getElementById('matrix_size_div').classList.remove('hidden')
+    try {
+        document.getElementById('changeGraphType').classList.add('hidden')
+    } catch (err) {
+        console.log('Элемент toggle остутствует')
+    }
+  
 }
 
 // формирование таблицы
 // diag = false/true - разблокирована/диагональ заблокирована
 // bin = false/true - обычная с весами/бинарная
-function show_matrix(blockDiag = false, bin = false)
+// direction = false/true - нет/есть поле для ввода нач. и конечной вершин
+function show_matrix(blockDiag = false, bin = false, direction = false)
 {
     sizeButton = document.getElementById('changeMatrixSizeLink')
     sizeButton.classList.remove('hidden')
     sizeButton.addEventListener('click', function() {
         back_to_size(); // добавление функции get_matrix()
     });
+
+    try {
+        divToggle = document.getElementById('changeGraphType')
+        toggle = document.getElementById('graphToggle')
+        toggle.disabled = false
+        toggle.checked = true
+        divToggle.classList.remove('hidden')
+    } catch (err) {
+        console.log('Элемент toggle остутствует')
+    }
+  
 
     var size = document.getElementById('range_size_of_matrix').value // размер матрицы
     document.getElementById('matrix_size_div').classList.add('hidden') // прячем блок ввода размера матрицы
@@ -210,6 +275,7 @@ function show_matrix(blockDiag = false, bin = false)
         for (var j = 1; j <= size; j++) {
             var cell = document.createElement('td');
             var input = document.createElement('input');
+            input.classList.add('dark:text-gray-400')
             if (!bin)
                 input.type = 'text';
             else
@@ -221,6 +287,7 @@ function show_matrix(blockDiag = false, bin = false)
                 input.value = 0;
                 input.className = "blocked"
                 input.classList.add('bg-gray-500')
+                input.classList.add('dark:text-gray-400')
             } 
             cell.appendChild(input);
             row.appendChild(cell);
@@ -230,18 +297,106 @@ function show_matrix(blockDiag = false, bin = false)
     table.appendChild(tbody);
     matrixContainer.appendChild(table);
 
+    if (direction) {
+        // добавление пути
+        // создаем блок для элементов "Из" и "В"
+        var ioContainer = document.createElement('div');
+        ioContainer.className = 'flex items-center justify-between p-4';
+        ioContainer.id = 'path'
+
+        // создаем элементы label для подписей "Из" и "В"
+        var fromLabel = document.createElement('label');
+        fromLabel.textContent = 'Из:';
+        fromLabel.className = 'p-1 dark:text-gray-400';
+    
+        var toLabel = document.createElement('label');
+        toLabel.textContent = 'В:';
+        toLabel.className = 'p-1 dark:text-gray-400';
+
+        // добавляем элементы label в блок "Из/В"
+        ioContainer.appendChild(fromLabel);
+
+        // Создаем элементы input для "Из" и "В"
+        var fromInput = document.createElement('input');
+        fromInput.type = 'text';
+        fromInput.classList.add('border', 'rounded', 'dark:bg-gray-800', 'dark:text-gray-400');
+        fromInput.id = 'from'
+
+        var toInput = document.createElement('input');
+        toInput.type = 'text';
+        toInput.classList.add('border', 'rounded', 'dark:bg-gray-800', 'dark:text-gray-400');
+        toInput.id = 'to'
+
+        // Добавляем элементы input в блок "Из/В"
+        ioContainer.appendChild(fromInput);
+
+        // Добавляем подпись "В" после input "Из"
+        ioContainer.appendChild(toLabel);
+
+        // Добавляем элемент input "В" после подписи "В"
+        ioContainer.appendChild(toInput);
+
+        // Добавляем блок "Из/В" под таблицей с матрицей
+        matrixContainer.appendChild(ioContainer);
+    }
+
     // разрешения на ввод только чисел
     matrixContainer.addEventListener('input', function(event) {
         var target = event.target;
     
-        if (target.tagName === 'INPUT') {
-            var inputValue = target.value;
-            // Разрешаем только цифры и числа до 999
-            if (!/^\d{1,3}$/.test(inputValue)) {
-                // Очищаем поле ввода от некорректных символов
-                target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
+        const currentURL = window.location.href;
+        console.log(currentURL);
+
+        if (currentURL.includes('/shortest_path')) {
+            if (target.tagName === 'INPUT') {
+            let inputValue = target.value;
+  
+            // Разрешаем только числа от -999 до 999
+            if (/^-?\d{0,3}$/.test(inputValue)) {
+                // Если число находится в допустимом диапазоне, оставляем его без изменений
+                return;
+            }
+    
+            // Очищаем поле ввода от некорректных символов
+            inputValue = inputValue.replace(/\D/g, '');
+    
+            // Ограничиваем ввод до 3 символов
+            if (inputValue.length > 3) {
+                inputValue = inputValue.slice(0, 3);
+            }
+    
+            // Если ввод содержит знак "-" перед числом, ограничиваем до -999
+            if (inputValue.startsWith('-')) {
+                inputValue = '-' + inputValue.slice(1, 4);
+            } else {
+                // Ограничиваем ввод до 999
+                inputValue = inputValue.slice(0, 3);
+            }
+    
+            // Обновляем значение в поле ввода
+            target.value = inputValue;
+        }
+        } else {
+            if (target.tagName === 'INPUT') {
+                var inputValue = target.value;
+                // Разрешаем только цифры и числа до 999
+                if (!/^\d{1,3}$/.test(inputValue)) {
+                    // Очищаем поле ввода от некорректных символов
+                    target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
+                }
             }
         }
+        // Проверяем, что изменения происходят в элементах с id='from' или id='to'
+        if (target.id === 'from' || target.id === 'to') {
+            var inputValue = parseInt(target.value, 10); // Преобразуем введенное значение в число
+
+            // Проверяем, чтобы введенное значение не превышало размера матрицы
+            if (isNaN(inputValue) || inputValue > size - 1) {
+                // Если введено число больше размера матрицы, удаляем его
+                target.value = ''
+            }
+        }
+
     });
 
     var buttonContainer = document.createElement('div');
