@@ -13,7 +13,7 @@ app.config.from_object('config')
 app.secret_key = 'your_secret_key' # секретный ключ для подписы данных сессии
 
 ## имплементация бд
-app.config['SQLALCHEMY_DATABASE_URI'] = f'postgresql+psycopg2://bauman:baumanpassword@postgres_db:6543/graphdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@postgres_db:5432/graphdb'
 db = SQLAlchemy(app)
 
 class Problem_class(db.Model):

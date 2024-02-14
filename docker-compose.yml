@@ -8,12 +8,12 @@ services:
     restart: unless-stopped
     container_name: flask_graph
     ports:
-      - "5000:5000"
+      - '80:5000'
     networks:
-      - postgres_db
+      - graph_global_net
+      - postgres_db_net
     depends_on:
       - pg_db
-    command: ["/bin/bash", "-c", "python /usr/src/app/fill_db.py"]
 
   pg_db:
     image: postgres
@@ -24,11 +24,15 @@ services:
       - POSTGRES_USER=bauman
       - POSTGRES_PASSWORD=baumanpassword
     ports:
-      - "6543:5432"
+      - '5432:5432'
     networks:
-      - postgres_db
+      - postgres_db_net
     
 networks:
-  postgres_db:
+  graph_global_net:
+    name: graph_global_net
+    driver: bridge
+  postgres_db_net:
+    name: postgres_db_net
     driver: bridge
     
