@@ -1,4 +1,8 @@
 # graph_bauman_centuary_presents
+
+перед запуском проверить комментарии в app.py насчет базы данных строка (18)
+app.config['SQLALCHEMY_DATABASE_URI'] 
+
 ## Для запуска проекта
 ```
 npm install # установка недостающих node_modules
