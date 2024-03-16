@@ -57,6 +57,8 @@ def algorithm_Dijkstra(matrix, start = 0, end = -1, orgraph = True):
             if dist[i] < distmin and visited[i] == False:
                 distmin = dist[i]
                 index = i
+        if distmin == math.inf: #######
+            index = -1  ##############
         return index
 
     line_list = []
@@ -64,6 +66,8 @@ def algorithm_Dijkstra(matrix, start = 0, end = -1, orgraph = True):
     while False in visited:
 
         i = gofrom()
+        if i == -1: #######
+            break #######
 
         next_line = []
         next_line.append(f'x{i}')
@@ -79,7 +83,7 @@ def algorithm_Dijkstra(matrix, start = 0, end = -1, orgraph = True):
         for x in range(len(line_list)):
             new_step.matrix.append(line_list[x])
 
-        step_string ='Находим кратчайшие пути в вершины путем сравнения суммы кратчайшего пути в смежную вершину и пути из смежной вершины в данную <br/>'
+        step_string ='Находим кратчайшие пути в вершины путем сравнения известной суммы кратчайшего пути в смежную вершину и пути из смежной вершины в данную <br/>'
         for j in range(n):
             if matrix[i][j] != 0 and (not visited[j]): 
                 if dist[j] < dist[i] + matrix[i][j]:
@@ -103,6 +107,8 @@ def algorithm_Dijkstra(matrix, start = 0, end = -1, orgraph = True):
 
     path = [end]
     dist_sum = dist[end]
+    kostil = [end] ##############
+
     while end != start:
         new_step = Step(True, orgraph, True)
         new_step.nodes = all_vertex
@@ -137,7 +143,7 @@ def algorithm_Dijkstra(matrix, start = 0, end = -1, orgraph = True):
             else:
                 new_step.node_options[j] += f', "color": "#8FBFE0"'
         
-        distance_string = f'Сравниваем длину кратчайшего пути из точки {start} в точку {end} и суммы длин кратчайших путей из точки {start} в точки графа и длин путей из этих точек в точку {end} <br/>'
+        distance_string = f'Сравниваем длину кратчайшего пути из точки {start} в точку {end} и суммы длин кратчайших путей из точки {start} в остальные точки графа (кроме точки {end}) и длин путей из этих точек в точку {end} <br/>'
         for i in range(n):
             if matrix[i][end] != 0:
                 if dist[end] == dist[i] + matrix[i][end]:
@@ -151,7 +157,9 @@ def algorithm_Dijkstra(matrix, start = 0, end = -1, orgraph = True):
                 else:
                     distance_string += f"{dist[end]} =/= {dist[i]} + {matrix[i][end]} <br/>"
         
-        if i == n-1:
+        # if i == n-1:
+        kostil.append(path[-1]) ###
+        if kostil[-2] == kostil[-1]: ###
             new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Пути не найдены</p>'
             steps.append(new_step)
             break
@@ -336,6 +344,7 @@ def algorithm_Bellman_Ford(matrix, start = 0, end = -1, orgraph = True):
     path = [end]
     dist_sum = dist[end]
     flag= True
+    kostil = [end] #########
 
     while end != start:
         new_step = Step(True, orgraph, True)
@@ -383,7 +392,9 @@ def algorithm_Bellman_Ford(matrix, start = 0, end = -1, orgraph = True):
                 else:
                     distance_string += f"{dist[end]} =/= {dist[i]} + {matrix[i][end]} <br/>"
         
-        if i == n-1:
+        # if i == n-1:
+        kostil.append(path[-1]) ###
+        if kostil[-2] == kostil[-1]: ###
             new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Пути не найдены</p>'
             steps.append(new_step)
             break
@@ -526,6 +537,7 @@ def algorithm_Floyd_Warshall(matrix, start = 0, end = -1, orgraph = True):
 
     path = [end]
     flag= True
+    kostil = [end] ######
     dist_sum = dist[start][end]
     print()
 
@@ -575,7 +587,9 @@ def algorithm_Floyd_Warshall(matrix, start = 0, end = -1, orgraph = True):
                 else:
                     distance_string += f"{dist[start][end]} =/= {dist[start][i]} + {matrix[i][end]} <br/>"
         
-        if i == n-1:
+        # if i == n-1:
+        kostil.append(path[-1]) ###
+        if kostil[-2] == kostil[-1]: ###
             new_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Пути не найдены</p>'
             steps.append(new_step)
             break

@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, session, jsonify
-import Algorithms.Strong_Connectivity as sc # импорт модуля Андрея
-import Algorithms.Topological_Sort as ts # импорт модуля Кирилла
-import Algorithms.Minimal_spanning_tree as st # импорт модуля Коли
-import Algorithms.Shortest_Path as sp # импорт модуля Маши
+import Algorithms.Strong_Connectivity as sc
+import Algorithms.Topological_Sort as ts
+import Algorithms.Minimal_spanning_tree as st
+import Algorithms.Shortest_Path as sp
 import ast
 
 from flask_sqlalchemy import SQLAlchemy ## имплементация бд
@@ -16,8 +16,8 @@ app.secret_key = 'your_secret_key' # секретный ключ для подп
 
 ########################### ДЛЯ ДОКЕРА #########################
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@postgres_db:5432/graphdb'
-########################### ДЛЯ НОРМ РАБОТЫ #########################
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@localhost:5432/graphdb'
+########################### ДЛЯ ЛОКАЛЬНОЙ РАБОТЫ #########################
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@localhost:5432/bauman'
 
 db = SQLAlchemy(app)
 
