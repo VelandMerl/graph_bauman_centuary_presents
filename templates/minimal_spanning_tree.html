@@ -5,38 +5,6 @@
 
 {% block content %}
 
-<script>
-    function disableDiagonalInputs() {
-    var matrixTable = document.getElementById('matrix-table');
-    var rows = matrixTable.rows;
-    for (var i = 0; i < rows.length; i++) {
-        for (var j = 0; j < rows[i].cells.length; j++) {
-            var cell = rows[i].cells[j];
-            if (i > j) {
-                var input = cell.querySelector('input');
-                if (input) {
-                    input.disabled = true;
-                    input.classList.add('bg-gray-500') 
-                    input.classList.remove('dark:bg-gray-800')
-                    input.classList.add('dark:bg-gray-500') 
-                }
-            }
-        }
-    }
-}
-
-// Функция, которая будет запускаться через определенные интервалы времени
-function checkMatrixAndDisableDiagonal() {
-    var matrixTable = document.getElementById('matrix-table');
-    if (matrixTable) {
-        disableDiagonalInputs(); // Проверяем и отключаем элементы
-    }
-}
-
-// Запускаем функцию через определенные интервалы (например, каждые 5 секунд)
-setInterval(checkMatrixAndDisableDiagonal, 100); // Измените интервал на необходимый
-</script>
-
 <div class="max-w-screen-xl mx-auto">
     <div class="flex flex-col items-center">
         <div class="flex items-center mb-5">
@@ -70,7 +38,7 @@ setInterval(checkMatrixAndDisableDiagonal, 100); // Измените интер�
                 <input id="range_size_of_matrix" onchange="change_Size(this)" type="range" min="2" max="10" value="6" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700">
             </div>
             <div>
-                <button onclick="show_matrix(true, false)" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Подтвердить</button>
+                <button onclick="show_matrix(true, false, false, true)" type="button" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">Подтвердить</button>
             </div>
         </div>
         <!--изменил ширину блока-->

@@ -1,5 +1,5 @@
 # Используем базовый образ Python
-FROM python:3
+FROM python:3.12.3-bullseye
 
 # Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /usr/src/app

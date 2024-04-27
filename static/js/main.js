@@ -1,5 +1,3 @@
-// просьба сильно не редачить эту красоту :)
-
 // функция смены шаблона страницы ввода алгоритма
 var route = {
     dm: '/topological_sort/demukron',
@@ -145,8 +143,8 @@ function get_matrix()
             pathFlag: pathFlag
         };
     }
-        
-    // отправляем данные на сервер
+       
+    // отправляем информацию на сервер
     fetch('/set_data_to_session', {
         method: 'POST',
         headers: {
@@ -154,6 +152,20 @@ function get_matrix()
         },
         body: JSON.stringify(dataToSend) // отправляем данные
     })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Произошла ошибка при получении данных');
+        }
+        return response.json();
+    })
+    .then(data => {
+        // Действия с полученными данными data
+        console.log('Данные успешно получены:', data);
+        // Перенаправление на другую страницу
+    })
+    .catch(error => {
+        console.error('Произошла ошибка:', error);
+    }); 
 
     document.getElementById('send-btnContainer').classList.add('hidden') // прячем кнопки ввода матрицы
 
@@ -208,10 +220,11 @@ function back_to_size()
 }
 
 // формирование таблицы
-// diag = false/true - разблокирована/диагональ заблокирована
+// blockDiag = false/true - разблокирована/диагональ заблокирована
 // bin = false/true - обычная с весами/бинарная
 // direction = false/true - нет/есть поле для ввода нач. и конечной вершин
-function show_matrix(blockDiag = false, bin = false, direction = false)
+// up_triangular = false/true - нет/верхнетреугольная матрица
+function show_matrix(blockDiag = false, bin = false, direction = false, up_triangular = false)
 {
     sizeButton = document.getElementById('changeMatrixSizeLink')
     sizeButton.classList.remove('hidden')
@@ -288,7 +301,13 @@ function show_matrix(blockDiag = false, bin = false, direction = false)
                 input.className = "blocked"
                 input.classList.add('bg-gray-500')
                 input.classList.add('dark:text-gray-400')
-            } 
+            }
+            if (up_triangular && i > j) { // блокировка диагонали
+                input.disabled = true;
+                input.classList.add('bg-gray-500') 
+                input.classList.remove('dark:bg-gray-800')
+                input.classList.add('dark:bg-gray-500') 
+            }
             cell.appendChild(input);
             row.appendChild(cell);
         }

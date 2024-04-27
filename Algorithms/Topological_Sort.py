@@ -16,29 +16,48 @@ def algorithm_depth_first_search(matrix):
 
     # вложенная функция, реализующая алгоритм
     def dfs(prev_ver, cur_ver):
-        print(f' Текущая вершина: {cur_ver}')
+        # print(f' Текущая вершина: {cur_ver}')
         #h_step.node_options[cur_ver] = replace_color(h_step.node_options[cur_ver], "#DC143C") # изменение цвета по маршруту
-        h_step.node_options[cur_ver] += ', borderWidth: 3, color: {border: "#DC143C", background: "#1E90FF", highlight: { border: "#DC143C" }}'; # изменение цвета границы по маршруту
+        h_step.node_options[cur_ver] += ', borderWidth: 3, color: {border: "#DC143C", background: "#1E90FF", highlight: { border: "#DC143C" }}' # изменение цвета границы по маршруту
         vertex_mark[cur_ver] = False # вершина просмотрена
         while mass[cur_ver]: # пока есть смежные вершины
             # h_step.edge_options[(cur_ver, mass[cur_ver][0])] += replace_color(h_step.edge_options[(cur_ver, mass[cur_ver][0])], "#DC143C")  # подкрашиваем ребро 
             if vertex_mark[mass[cur_ver][0]] == None: # МОЖЕТ БЫТЬ ПЕТЛЯ or vertex_mark[mass[cur_ver][0]] == False
                 h_step.edge_options[(cur_ver, mass[cur_ver][0])] += ', "color": "#DC143C", width: 3'  # подкрашиваем ребро
-            if vertex_mark[mass[cur_ver][0]] == None:
-                print(f' Переходим к смежной вершине: {mass[cur_ver][0]}')
+#           if vertex_mark[mass[cur_ver][0]] == None:
+                # print(f' Переходим к смежной вершине: {mass[cur_ver][0]}')
                 route.append(cur_ver) # добавляем вершину в маршрут
                 # переходим к первой смежной вершине
                 if not dfs(cur_ver, mass[cur_ver][0]): # обнаружен контур
                     return False
-                print(f' Возвращаемся к вершине {cur_ver}')
+                # print(f' Возвращаемся к вершине {cur_ver}')
                 h_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Возвращаемся к вершине {cur_ver}</p>' + h_step.text
-                print(f' Текущая вершина: {cur_ver}')
+                # print(f' Текущая вершина: {cur_ver}')
                 mass[cur_ver].pop(0) # удаляем просмотренную смежную вершину
             elif vertex_mark[mass[cur_ver][0]]:
                 mass[cur_ver].pop(0) # удаляем просмотренную смежную вершину
             else:
+                # h_step.edge_options[(cur_ver, mass[cur_ver][0])] += ', "color": "#DC143C", width: 3'  # подкрашиваем ребро
+                # for i in all_vertex: # возвращаем исходный цвет вершинам
+                #     h_step.node_options[i] += ', "color": "#1E90FF"'
+
+                route.append(cur_ver) # добавляем вершину в маршрут
+                route.append(mass[cur_ver][0]) # добавляем вершину в маршрут
+                steps.clear()
+
+                # print(f'МАРШРУТ ПРЕРЫВАНИЯ: {route}')
+            
+                # for ver in route:
+                #     h_step.node_options[ver] += ', borderWidth: 3, color: {border: "#DC143C", background: "#1E90FF", highlight: { border: "#DC143C" }}' # изменение цвета границы по маршруту
+                
+                # h_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400"">АЛГОРИТМ ПРЕРВАН ИЗ-ЗА НАЛИЧИЯ КОНТУРА В ГРАФЕ!</p>' # текст шага
+                
+                # steps.clear()
+                # alg_result.append(h_step)
+
                 return False # обнаружен контур
-        print(f'Смежных непомеченных вершин нет, помещаем в стек вершину {cur_ver}')
+        
+        # print(f'Смежных непомеченных вершин нет, помещаем в стек вершину {cur_ver}')
         vertex_mark[cur_ver] = True # определён порядок вершины
         stack.append(cur_ver) # помещаем вершину в стек
         vertex.remove(cur_ver) # исключаем вершину для повторного просмотра
@@ -78,7 +97,7 @@ def algorithm_depth_first_search(matrix):
         mass.append(neighbor)
     edges = get_edges(matrix) # список рёбер
     all_vertex = vertex.copy()
-    print(f'Вершины: {all_vertex}')
+    # print(f'Вершины: {all_vertex}')
 
     # исходный граф
     first_step = Step(True, True) # создаём первый шаг (исходный граф)
@@ -90,7 +109,7 @@ def algorithm_depth_first_search(matrix):
     for edge in edges.keys():
         first_step.edge_options[edge] = 'label: "1"'
         first_step.edge_options[edge] += ', "color": "#1E90FF"'
-    print(f'рёбра: {first_step.edge_options}')
+    # print(f'рёбра: {first_step.edge_options}')
 
 
     for i in all_vertex: # метки для вершин
@@ -100,21 +119,20 @@ def algorithm_depth_first_search(matrix):
 
     # выбор начальной вершины обхода
     h_step = copy.deepcopy(first_step) # создаём вспомогательный объект (шаг)
-    print(vertex)
+    # print(vertex)
     while vertex:
-        new_step = copy.deepcopy(first_step) # создаём первый шаг
+        # new_step = copy.deepcopy(first_step) # создаём первый шаг
         h_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Маршрут обхода: ' # текст шага
         if not dfs(0, vertex[0]): # запуск алгоритма
             loop = True
             print('Выполнение алгоритма прервано из-за наличия контура')
             break
-    print(f'Вершины в стеке:', list(map(lambda el: el, stack)))
+    # print(f'Вершины в стеке:', list(map(lambda el: el, stack)))
     if not loop:
-        print('Алгоритм успешно завершен')
+        # print('Алгоритм успешно завершен')
 
         result_step = copy.deepcopy(first_step)
         result_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Стек - {stack} ({stack[-1]} - вершина стека)</p>'
-        result_step.text += '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф, разбитый на уровни</p>' # текст шага
         stack.reverse() # переворачиваем список для следования вершин по уровням
         for ver in stack: # установка уровней для вершин
             result_step.node_options[ver] = f'label: "x{ver}"'
@@ -126,9 +144,9 @@ def algorithm_depth_first_search(matrix):
         for i in range(len(stack)-1):
             neighbor_ver.append(tuple([stack[i], stack[i+1]]))
         
-        print(f'Пары смежных вершин: {neighbor_ver}')
+        # print(f'Пары смежных вершин: {neighbor_ver}')
 
-        result_step.general_options += ', layout: { hierarchical: { direction: "LR", levelSeparation: 100} }'
+        result_step.general_options += ', layout: { hierarchical: { direction: "LR", levelSeparation: 100} }, physics: { stabilization: { iterations: 1000 } }'
         flag = True
         for edge in edges.keys():
             # result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", "forceDirection": "none" }, width: 1'
@@ -140,13 +158,17 @@ def algorithm_depth_first_search(matrix):
             else:
                 result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", roundness: 0.5 }, width: 1'
                 flag = True
-            
-        alg_result.append(result_step)
     else:
-        print('ОШИБКА')
-        result_step = Step(True, True)
+        result_step = copy.deepcopy(first_step)
+        # print('ОШИБКА')
+        # print(f'МАРШРУТ ПРЕРЫВАНИЯ: {route}')
+        route = route[route.index(route[-1]):]
+        for i in range(len(route) - 1):
+            result_step.node_options[route[i]] += ', borderWidth: 3, color: {border: "#DC143C", background: "#1E90FF", highlight: { border: "#DC143C" }}'
+            result_step.edge_options[(route[i], route[i+1])] += ', "color": "#DC143C", width: 3'
         result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400"">АЛГОРИТМ ПРЕРВАН ИЗ-ЗА НАЛИЧИЯ КОНТУРА В ГРАФЕ!</p>' # текст шага
-        alg_result.append(result_step)
+
+    alg_result.append(result_step)
 
     # добавление таблицы в исходные данные
     alg_input = Step(True, True, True)
@@ -197,22 +219,29 @@ def demukron(matrix):
         # формирование исходной матрицы
         first_line = []
         first_line.append('')
+        first_line.append('')
         for i in range(size_of_matrix):
             first_line.append(f'x<sub>{i}</sub>')
         step.matrix.append(list(first_line))
-        for i in range(size_of_matrix):
+        for i in range(0, size_of_matrix):
             next_line = []
+            next_line.append('')
             next_line.append(f'x<sub>{i}</sub>')
             next_line += (list(matrix[i]))
             step.matrix.append(list(next_line))
         for i in range(1, size_of_matrix+1):
-            step.matrix[i][i] = -1
+            step.matrix[i][i+1] = -1
 
         # формирование уровня
         level = 0
         while vertex:
 
-            step = copy.deepcopy(step)
+            # строка уровня
+            level_line = ['&#10006;'] * (size_of_matrix)
+            level_line.insert(0, f'K={level}')
+            level_line.insert(1, f'ⴷ<sub>{level}</sub>')
+            
+
             step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">'
             
             flag = False # уровень отсутствует
@@ -222,21 +251,26 @@ def demukron(matrix):
                 # просмотр входящих вершин
                 for j in range(len(matrix)):
                     sum += matrix[j][i]
+                level_line[i+2] = str(sum) # добавляем сумму в строку уровня
                 if sum == 0:
                     level_v.add(i) # добавление вершины в уровень
                     vertex_level[i] = level # обновление уровня вершины
                     flag = True # уровень найден
-            if flag:
-                print(f'Вершины {level} уровня: ', set(map(lambda el: el, level_v)))
-            else:
+
+            step.matrix.append(list(level_line)) # добавление строки под матрицей
+
+            
+                # print(f'Вершины {level} уровня: ', set(map(lambda el: el, level_v)))
+            if (not flag):
+                step.text += 'ВЕРШИНЫ БЕЗ ВХОДЯЩИХ РЁБЕР ОТСУТСТВУЮТ!'
+                step.step_label = f'Формирование уровня N <sub>{level}</sub>'
+                steps.append(step)
                 return False # уровень не сформирован
             for i in level_v:
                 matrix[i] = list(map(lambda el: 0, matrix[i]))  # удаление(зануление) строки
             
             # удаление строки
             for ver in level_v:
-                for i in range(1, size_of_matrix+1):
-                    step.matrix[ver+1][i] = -1
                 step.text += f'Вершина x<sub>{ver}</sub> не имеет входящих рёбер<br/>'
             step.text += f'Формируем уровень N<sub>{level}</sub>  = ' + '{&nbsp'
             for ver in level_v:
@@ -246,10 +280,18 @@ def demukron(matrix):
                 step.text += f'Порядковая функция O(x<sub>{ver}</sub>) = {level}<br/>'
             step.text += '</p>'
             step.step_label = f'Формирование уровня N <sub>{level}</sub>'
-            
+
             steps.append(step)
 
-            print(f'матрица {matrix}')
+            # print(f'СТРОКА!!! {level_line}')
+            
+
+            step = copy.deepcopy(step)
+            for ver in level_v:
+                for i in range(1, size_of_matrix+1):
+                    step.matrix[ver+1][i+1] = -1
+
+            # print(f'матрица {matrix}')
             vertex -= level_v # исключение вершин с определённым уровнем
             level += 1
         return True
@@ -265,15 +307,15 @@ def demukron(matrix):
 
     # исходный граф
     alg_input = Step(True, True, True) # создаём первый шаг (исходный граф)
-    alg_input.text = '<p class="mb-2 text-gray-500 dark:text-gray-400">Это граф по введённой матрице</p>' # текст шага
     alg_input.nodes = all_vertex # список вершин
     alg_input.edges = edges # список ребер
+    alg_input.text = '' # текст шага
 
     # общие опции для рёбер
     for edge in edges.keys():
         alg_input.edge_options[edge] = 'label: "1"'
         alg_input.edge_options[edge] += ', "color": "#1E90FF"'
-    print(f'рёбра: {alg_input.edge_options}')
+    # print(f'рёбра: {alg_input.edge_options}')
 
     for i in all_vertex: # метки для вершин
         alg_input.node_options[i] = f'label: "x{i}"'
@@ -297,8 +339,8 @@ def demukron(matrix):
 
     res = dm(vertex) # запуск алгоритма
     if res:
-        print('Алгоритм успешно завершен')  
-        print(f'Вершины по уровням: {vertex_level}')
+        # print('Алгоритм успешно завершен')  
+        # print(f'Вершины по уровням: {vertex_level}')
         result_step = copy.deepcopy(alg_input)
         result_step.matrix = []
         result_step.text = f'<p class="mb-2 text-gray-500 dark:text-gray-400">Разделение вершин по уровням - {vertex_level})</p>'
@@ -319,8 +361,8 @@ def demukron(matrix):
 
         result_step.general_options += ', layout: { hierarchical: { direction: "LR", levelSeparation: 100, nodeSpacing: 150} }'
 
-        print(edges)
-        print(neighbor_ver)
+        # print(edges)
+        # print(neighbor_ver)
         flag = True
         for edge in edges.keys():
             # result_step.edge_options[edge] = 'smooth: { "enabled": true, "type": "curvedCCW", "forceDirection": "none" }, width: 1'
@@ -348,7 +390,7 @@ def demukron(matrix):
         result_step.text += '</p>'
         alg_result.append(result_step)
     else:
-        print('Выполнение алгоритма прервано из-за наличия контура')
+        # print('Выполнение алгоритма прервано из-за наличия контура')
         result_step = Step()
         result_step.text = '<p class="mb-2 text-gray-500 dark:text-gray-400"">АЛГОРИТМ ПРЕРВАН ИЗ-ЗА НАЛИЧИЯ КОНТУРА В ГРАФЕ!</p>' # текст шага
         alg_result.append(result_step)

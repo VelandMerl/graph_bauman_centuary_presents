@@ -8,7 +8,7 @@ services:
     restart: unless-stopped
     container_name: flask_graph
     ports:
-      - '80:5000'
+      - '5000:5000'
     networks:
       - graph_global_net
       - postgres_db_net
@@ -16,7 +16,7 @@ services:
       - pg_db
 
   pg_db:
-    image: postgres
+    image: postgres:16-alpine3.19
     container_name: postgres_db
     restart: unless-stopped
     environment:
@@ -24,7 +24,7 @@ services:
       - POSTGRES_USER=bauman
       - POSTGRES_PASSWORD=baumanpassword
     ports:
-      - '5432:5432'
+      - '6543:5432'
     networks:
       - postgres_db_net
     
