@@ -51,10 +51,25 @@ class Example (db.Model):
         return f"Example: {self.ex}"
 ## имплементация бд
 
+route = [
+    '/topological_sort/demukron',
+    '/topological_sort/depth_first_search',
+    '/strong_connectivity/malgrange',
+    '/strong_connectivity/kosaraju',
+    '/minimal_spanning_tree/prim',
+    '/minimal_spanning_tree/kraskal',
+    '/shortest_path/dijkstra',
+    '/shortest_path/bellman–ford',
+    '/shortest_path/floyd_warshall',
+]
+
 # перехват ошибок работы алгоритмов
 @app.errorhandler(Exception)
 def handle_error(error):
-    return render_template('error.html'), 500
+    if request.method == 'GET' and request.path in route:
+        return render_template('error.html'), 500
+    else:
+        return None
 
 # начальная страница
 @app.route('/')
