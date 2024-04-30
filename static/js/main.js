@@ -161,6 +161,7 @@ function get_matrix()
     .then(data => {
         // Действия с полученными данными data
         console.log('Данные успешно получены:', data);
+
         // Перенаправление на другую страницу
     })
     .catch(error => {
@@ -366,49 +367,19 @@ function show_matrix(blockDiag = false, bin = false, direction = false, up_trian
         const currentURL = window.location.href;
         console.log(currentURL);
 
-        if (currentURL.includes('/shortest_path')) {
-            if (target.tagName === 'INPUT') {
-            let inputValue = target.value;
-  
-            // Разрешаем только числа от -999 до 999
-            if (/^-?\d{0,3}$/.test(inputValue)) {
-                // Если число находится в допустимом диапазоне, оставляем его без изменений
-                return;
-            }
-    
-            // Очищаем поле ввода от некорректных символов
-            inputValue = inputValue.replace(/\D/g, '');
-    
-            // Ограничиваем ввод до 3 символов
-            if (inputValue.length > 3) {
-                inputValue = inputValue.slice(0, 3);
-            }
-    
-            // Если ввод содержит знак "-" перед числом, ограничиваем до -999
-            if (inputValue.startsWith('-')) {
-                inputValue = '-' + inputValue.slice(1, 4);
-            } else {
-                // Ограничиваем ввод до 999
-                inputValue = inputValue.slice(0, 3);
-            }
-    
-            // Обновляем значение в поле ввода
-            target.value = inputValue;
-        }
-        } else {
-            if (target.tagName === 'INPUT') {
-                var inputValue = target.value;
-                // Разрешаем только цифры и числа до 999
-                if (!/^\d{1,3}$/.test(inputValue)) {
-                    // Очищаем поле ввода от некорректных символов
-                    target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
-                }
+        if (target.tagName === 'INPUT') {
+            var inputValue = target.value;
+            // Разрешаем только цифры и числа до 999
+            if (!/^\d{1,3}$/.test(inputValue)) {
+                // Очищаем поле ввода от некорректных символов
+                target.value = inputValue.replace(/\D/g, '').slice(0, 3); // Ограничиваем ввод до 3 символов
             }
         }
         // Проверяем, что изменения происходят в элементах с id='from' или id='to'
         if (target.id === 'from' || target.id === 'to') {
             var inputValue = parseInt(target.value, 10); // Преобразуем введенное значение в число
 
+            size = document.getElementById('range_size_of_matrix').value
             // Проверяем, чтобы введенное значение не превышало размера матрицы
             if (isNaN(inputValue) || inputValue > size - 1) {
                 // Если введено число больше размера матрицы, удаляем его

@@ -51,6 +51,11 @@ class Example (db.Model):
         return f"Example: {self.ex}"
 ## имплементация бд
 
+# перехват ошибок работы алгоритмов
+@app.errorhandler(Exception)
+def handle_error(error):
+    return render_template('error.html'), 500
+
 # начальная страница
 @app.route('/')
 def home():
@@ -73,7 +78,7 @@ def set_data_to_session():
         session['start_ver'] = data.get('start_ver') # сохранение нач. вершины в словаре "Session"
         session['finish_ver'] = data.get('finish_ver') # сохранение кон. вершины в словаре "Session"
         session['orgraph'] = data.get('orgraph') # сохранение вида графа
-        print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', f'Тип графа: {session["orgraph"]}', sep="\n") # тестовый вывод
+        # print(f'Начало: {session["start_ver"]}', f'Конец: {session["finish_ver"]}', f'Тип графа: {session["orgraph"]}', sep="\n") # тестовый вывод
 
 
     return jsonify({'message': 'Данные успешно получены на сервере'})
@@ -86,11 +91,11 @@ def set_dbdata():
     # запрос для получения матрицы
     algos = Algorithm.query.filter_by(key = alg_code).first()
     matrix = Example.query.filter_by(alg_id = algos.id).first().ex # получение матрицы
-    print(matrix)
+    # print(matrix)
     matrix = ast.literal_eval(matrix)
-    print(matrix)
+    # print(matrix)
     session['matrix'] = matrix # сохранение матрицы в словаре "Session"
-    print(session['matrix'])
+    # print(session['matrix'])
 
     try:
         # получение направления
@@ -99,7 +104,7 @@ def set_dbdata():
         session['start_ver'] = dsc[0] # сохранение нач. вершины в словаре "Session"
         session['finish_ver'] = dsc[1] # сохранение кон. вершины в словаре "Session"
         session['orgraph'] = dsc[2] # сохранение вида графа
-        print(session['start_ver'],  session['finish_ver'], session['orgraph'])
+        # print(session['start_ver'],  session['finish_ver'], session['orgraph'])
     except ValueError:
         print('Этих данных нет в БД')
 
