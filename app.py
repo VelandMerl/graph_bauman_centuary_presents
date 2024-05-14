@@ -15,9 +15,9 @@ app.secret_key = 'your_secret_key' # секретный ключ для подп
 ## имплементация бд
 
 ########################### ДЛЯ ДОКЕРА #########################
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@postgres_db:5432/graphdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@postgres_db:5432/graphdb'
 ########################### ДЛЯ НОРМ РАБОТЫ #########################
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@localhost:5432/graphdb'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://bauman:baumanpassword@localhost:5432/graphdb'
 
 db = SQLAlchemy(app)
 
@@ -215,4 +215,6 @@ def prim():
 
 if __name__ == '__main__':
     # app.debug = True
-    app.run(host="0.0.0.0")
+    # app.run(host="0.0.0.0")
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=5000)
