@@ -71,6 +71,10 @@ def handle_error(error):
     else:
         return None
 
+@app.route('/favicon.ico')
+def favicon():
+    return url_for('static', filename='images/favicon.ico')
+
 # начальная страница
 @app.route('/')
 def home():
